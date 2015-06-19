@@ -1,0 +1,22 @@
+ssh-keygen -t rsa -C "532799609@qq.com"
+ssh -T git@github.com
+git config --global user.name "zengbin163"
+git config --global user.email "532799609@qq.com"
+git config --global github.user zengbin163
+git config --global github.token 9a7a46c4c977c36dd51b96c9bed8dac5a1c43bf3
+
+git remote add hiifit git@github.com:zengbin163/hiifit.git
+git remote rm hiifit
+git remote -v
+
+git add .
+git commit -m 'Readme update'
+git push -u hiifit master
+
+git clone git@github.com:zengbin163/hiifit.git
+
+git branch  -a
+
+git branch -r -d hiifit/haipay1.0   删除远程分支
+
+

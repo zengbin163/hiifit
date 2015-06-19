@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.3//EN" "http://struts.apache.org/dtds/struts-2.3.dtd">
+<struts>
+	<constant name="struts.convention.default.parent.package" value="hiifit-default" />
+	<constant name="struts.convention.package.locators" value="web" />
+	<constant name="struts.convention.result.path" value="/WEB-INF/jsp/" />
+	<constant name="struts.convention.package.locators.basePackage" value="com.hiifit.haipay.web" />
+	<constant name="struts.i18n.encoding" value="utf-8" />
+	<constant name="struts.enable.DynamicMethodInvocation" value="true" />
+
+	<package name="hiifit-default" extends="convention-default">
+		<interceptors>
+			<interceptor-stack name="webStack">
+				<interceptor-ref name="store">
+					<param name="operationMode">AUTOMATIC</param>
+				</interceptor-ref>
+				<interceptor-ref name="paramsPrepareParamsStack" />
+			</interceptor-stack>
+		</interceptors>
+
+		<default-interceptor-ref name="webStack" />
+
+		<global-exception-mappings>
+			<exception-mapping exception="java.lang.Exception"
+				result="error" />
+		</global-exception-mappings>
+	</package>
+</struts>
