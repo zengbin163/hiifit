@@ -237,8 +237,13 @@
 			<artifactId>javase</artifactId>
 			<version>2.2</version>
 		</dependency>
+		<dependency>
+			<groupId>bouncycastle</groupId>
+			<artifactId>bouncycastle-jce-jdk13</artifactId>
+			<version>112</version>
+		</dependency>
 	</dependencies>
-	
+
 	<build>
 		<!-- 定义资源文件需要被过滤 -->
 		<resources>
@@ -260,7 +265,7 @@
 					<showWarnings>true</showWarnings>
 					<compilerArguments>
 						<extdirs>src/main/webapp/WEB-INF/lib</extdirs>
-						<bootclasspath>${JAVA_HOME}/jre/lib/rt.jar,${JAVA_HOME}/jre/lib/jce.jar</bootclasspath>
+						<bootclasspath>${JAVA_HOME}/jre/lib/rt.jar</bootclasspath>
 					</compilerArguments>
 				</configuration>
 			</plugin>
