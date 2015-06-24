@@ -1,9 +1,3 @@
-/*
- * @Project: GZJK
- * @Author: bin
- * @Date: 2015年4月21日
- * @Copyright: 2000-2015 CMCC . All rights reserved.
- */
 package com.hiifit.haipay.enumEntity;
 
 /** 

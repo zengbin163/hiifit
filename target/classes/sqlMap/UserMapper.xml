@@ -2,47 +2,48 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.hiifit.haipay.dao.UserDao">
 
-	<sql id="Base_Column_List">
-		id,
-		nick_name,
-		mobile,
-		password,
-		last_login_time
-	</sql>
-
-	<resultMap id="BaseResultMap" type="com.hiifit.haipay.vo.User">
-		<id column="id" property="id" jdbcType="INTEGER" />
-		<result column="nick_name" property="nickName" jdbcType="VARCHAR" />
-		<result column="mobile" property="mobile" jdbcType="VARCHAR" />
-		<result column="password" property="password" jdbcType="VARCHAR" />
-		<result column="last_login_time" property="lastLoginTime"
-			jdbcType="TIMESTAMP" />
-	</resultMap>
-
-	<select id="getByUserId" resultMap="BaseResultMap">
-		select
-		<include refid="Base_Column_List" />
+	<select id="getByUserId" resultType="com.hiifit.haipay.vo.User">
+		select id id,
+			   nick_name nickName,
+			   mobile mobile,
+		       password password,
+		       last_login_time lastLoginTime,
+		       header_url headerUrl,
+		       sex sex
 		from t_hiifit_user
-		where
-		id = #{userId}
+		where id = #{userId}
 	</select>
-
-	<insert id="insert" useGeneratedKeys="true" keyProperty="id">
-		insert ignore into t_hiifit_user
-		(
-		mobile,
-		password,
-		nick_name,
-		register_time,
-		last_login_time
-		)
-		values
-		(
-		#{mobile},
-		#{password},
-		#{nickName},
-		NOW(),
-		NOW()
-		)
-	</insert>
+	
+	<select id="getAllUserLogo" resultType="com.hiifit.haipay.vo.UserLogo">
+		select id id,
+		       header_url headerUrl
+		from t_hiifit_user_logo
+	</select>
+	<select id="getAllUserVerb" resultType="com.hiifit.haipay.vo.UserVerb">
+		select id id,
+		       verb verb
+		from t_hiifit_user_verb
+	</select>
+	<select id="getAllUserNoun" resultType="com.hiifit.haipay.vo.UserNoun">
+		select id id,
+		       noun noun
+		from t_hiifit_user_noun
+	</select>
+	
+	<update id="updateUserById" parameterType="com.hiifit.haipay.vo.User">
+		update t_hiifit_user set modify_time=now()
+			<if test="nickName!=null">
+				,nick_name=#{nickName,jdbcType=VARCHAR}
+			</if>
+			<if test="headerUrl!=null">
+				,header_url=#{headerUrl,jdbcType=VARCHAR}
+			</if>
+			<if test="sex!=null">
+				,sex=#{sex,jdbcType=INTEGER}
+			</if>
+		<where>
+			<if test="id!=null" >id=#{id,jdbcType=INTEGER}</if>
+			<if test="id==null">1=0</if>
+		</where>
+	</update>
 </mapper>

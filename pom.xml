@@ -315,7 +315,7 @@
 				<!--缓存地址 -->
 				<env.memercached.servers>192.168.11.165:11211</env.memercached.servers>
 				<!-- 数据库连接 -->
-				<env.jdbc.url>jdbc:mysql://192.168.11.165:3306/cloudhealth?useUnicode=true&amp;characterEncoding=UTF8&amp;allowMultiQueries=true</env.jdbc.url>
+				<env.jdbc.url>jdbc:mysql://192.168.11.165:3306/hiifit1?useUnicode=true&amp;characterEncoding=UTF8&amp;allowMultiQueries=true</env.jdbc.url>
 				<env.jdbc.username>root</env.jdbc.username>
 				<env.jdbc.password>123456</env.jdbc.password>
 				<env.c3p0.maxPoolSize>3</env.c3p0.maxPoolSize>
@@ -344,7 +344,7 @@
 				<!--缓存地址 -->
 				<env.memercached.servers>192.168.11.165:11211</env.memercached.servers>
 				<!-- 数据库连接 -->
-				<env.jdbc.url>jdbc:mysql://192.168.11.165:3306/cloudhealth?useUnicode=true&amp;characterEncoding=UTF8&amp;allowMultiQueries=true</env.jdbc.url>
+				<env.jdbc.url>jdbc:mysql://192.168.11.165:3306/hiifit1?useUnicode=true&amp;characterEncoding=UTF8&amp;allowMultiQueries=true</env.jdbc.url>
 				<env.jdbc.username>root</env.jdbc.username>
 				<env.jdbc.password>123456</env.jdbc.password>
 				<env.c3p0.maxPoolSize>3</env.c3p0.maxPoolSize>

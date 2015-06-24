@@ -1,0 +1,9 @@
+/com/
+/config.properties
+/haipay.crt
+/haipay.keystore
+/mybatis-config.xml
+/spring.xml
+/sqlMap/
+/struts.xml
+/log4j.xml

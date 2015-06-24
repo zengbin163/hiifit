@@ -1,8 +1,13 @@
 package com.hiifit.haipay.dao;
 
+import java.util.List;
+
 import org.apache.ibatis.annotations.Param;
 
 import com.hiifit.haipay.vo.User;
+import com.hiifit.haipay.vo.UserLogo;
+import com.hiifit.haipay.vo.UserNoun;
+import com.hiifit.haipay.vo.UserVerb;
 
 /**
  * 用户登录操作DAO
@@ -19,16 +24,35 @@ public interface UserDao extends IBaseDao<User> {
     public User getByUserId(@Param(value = "userId") Integer userId);
     
     /**
-     * 删除用户（只修改用户状态为删除状态）
-     * @param userId
+     * <pre>
+     * 查询所有的用户logo加载到缓存
+     * </pre>
+     * @return
      */
-    public void deleteById(@Param(value = "userId") Integer userId);
+    public List<UserLogo> getAllUserLogo();
+
+    /**
+     * <pre>
+     * 查询所有的用户昵称动词加载到缓存
+     * </pre>
+     * @return
+     */
+    public List<UserVerb> getAllUserVerb();
     
-    /***
-     * 用户注册
+    /**
+     * <pre>
+     * 查询所有的用户昵称名词加载到缓存
+     * </pre>
+     * @return
+     */
+    public List<UserNoun> getAllUserNoun();
+    
+    /**
+     * <pre>
+     * 更新用户信息  
+     * </pre>
      * @param user
      * @return
      */
-    public int insert(User user);
-    
+    public int updateUserById(User user);
 }

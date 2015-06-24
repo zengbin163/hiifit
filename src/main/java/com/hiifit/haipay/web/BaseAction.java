@@ -15,6 +15,7 @@ import org.apache.struts2.interceptor.ServletResponseAware;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.cmcc.common.util.WebUtil;
+import com.hiifit.haipay.enumEntity.ReturnCodeEnum;
 import com.opensymphony.xwork2.ActionSupport;
 import com.opensymphony.xwork2.Preparable;
 
@@ -29,10 +30,13 @@ public abstract class BaseAction extends ActionSupport implements ServletRequest
     private static final long serialVersionUID = 3264789333544841923L;
     protected HttpServletRequest request;
     protected HttpServletResponse response;
-
+    protected  Object result;
+    
     protected void returnFastJSON(Object obj) {
         if(obj != null){
             WebUtil.returnJSON(response, JSON.toJSONString(obj, SerializerFeature.WriteMapNullValue).toString(), "json");
+        }else{
+            WebUtil.returnJSON(response, ("{\"recode\":\"" + ReturnCodeEnum.NOT_EXISTS.getCode() + "\"," + "\"msg\":\"" + ReturnCodeEnum.NOT_EXISTS.getString() + "\"}"), "json");
         }
     }
     
@@ -50,4 +54,11 @@ public abstract class BaseAction extends ActionSupport implements ServletRequest
     public void prepare() throws Exception {
     }
 
+    public Object getResult() {
+        return result;
+    }
+
+    public void setResult(Object result) {
+        this.result = result;
+    }
 }

@@ -2,50 +2,23 @@ package com.hiifit.haipay.vo;
 
 import java.io.Serializable;
 
-import com.hiifit.haipay.enumEntity.SexEnum;
-
-/**
- * 用户登录表
- * @author sen
- *
- */
 public class User implements Serializable {
     
     private static final long serialVersionUID = -6723648415687712333L;
     
-    /**
-     * 用户ID
-     */
     private Integer id;
     
-    /**
-     * 昵称
-     */
     private String nickName;
     
-    /**
-     * 用户手机号
-     */
     private String mobile;
     
-    /**
-     * 登录密码
-     */
     private String password;
     
-    /**
-     * 上次登录时间
-     */
     private String lastLoginTime;
-    
-    /**
-     * 是否需要更新敏感词
-     */
-    private Integer isUpdate;
     
     private String headerUrl;
     
-    private SexEnum sex;
+    private Integer sex;
     
     public User() {
     }
@@ -53,6 +26,13 @@ public class User implements Serializable {
     public User(String mobile, String password) {
         this.mobile = mobile;
         this.password = password;
+    }
+    
+    public User(Integer userId,String nickName,String headerUrl,Integer sex){
+        this.id = userId;
+        this.nickName = nickName;
+        this.headerUrl = headerUrl;
+        this.sex = sex;
     }
     
     public Integer getId() {
@@ -95,14 +75,6 @@ public class User implements Serializable {
         this.nickName = nickName;
     }
     
-    public Integer getIsUpdate() {
-        return isUpdate;
-    }
-    
-    public void setIsUpdate(Integer isUpdate) {
-        this.isUpdate = isUpdate;
-    }
-    
     public String getHeaderUrl() {
         return headerUrl;
     }
@@ -110,12 +82,12 @@ public class User implements Serializable {
     public void setHeaderUrl(String headerUrl) {
         this.headerUrl = headerUrl;
     }
-    
-    public SexEnum getSex() {
+
+    public Integer getSex() {
         return sex;
     }
-    
-    public void setSex(SexEnum sex) {
+
+    public void setSex(Integer sex) {
         this.sex = sex;
     }
     
