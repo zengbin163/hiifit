@@ -1,6 +1,7 @@
 package com.hiifit.haipay.manager.impl;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,12 +14,16 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import com.hiifit.haipay.dao.UserDao;
+import com.hiifit.haipay.enumEntity.ReturnCodeEnum;
 import com.hiifit.haipay.enumEntity.SexEnum;
 import com.hiifit.haipay.manager.UserManager;
+import com.hiifit.haipay.util.map.MapUtil;
+import com.hiifit.haipay.util.math.CodeUtil;
 import com.hiifit.haipay.util.math.RandomUtil;
 import com.hiifit.haipay.util.result.ResultUtil;
 import com.hiifit.haipay.vo.User;
 import com.hiifit.haipay.vo.UserFire;
+import com.hiifit.haipay.vo.UserFireComment;
 import com.hiifit.haipay.vo.UserLogo;
 import com.hiifit.haipay.vo.UserNoun;
 import com.hiifit.haipay.vo.UserVerb;
@@ -34,11 +39,13 @@ public class UserManagerImpl implements UserManager {
     private Map<Integer, String> nickNameNounMap = new HashMap<Integer, String>(); // 随机昵称名称
     
     private static final int headerBegin = 1;
-    private static final int headerEnd = 10;
+    private static final int headerEnd = 7;
     private static final int verbBegin = 1;
-    private static final int verbEnd = 3;
+    private static final int verbEnd = 192;
     private static final int nounBegin = 1;
-    private static final int nounEnd = 3;
+    private static final int nounEnd = 77;
+
+    private static final String FROM = "来自 # ";
     
     @PostConstruct
     public void init() {
@@ -61,57 +68,116 @@ public class UserManagerImpl implements UserManager {
             }
         }
     }
-
+    
     @Override
     public User getByUserId(Integer userId) {
         User user = this.userDao.getByUserId(userId);
-        if(null==user){
+        if (null == user) {
             return null;
         }
-        if(StringUtils.isEmpty(user.getHeaderUrl())){
+        if (StringUtils.isEmpty(user.getHeaderUrl())) {
             user.setHeaderUrl(this.headerLogoMap.get(RandomUtil.getAreaNum(headerBegin, headerEnd)));
         }
-        if(StringUtils.isEmpty(user.getNickName())){
+        if (StringUtils.isEmpty(user.getNickName())) {
             String verb = this.nickNameVerbMap.get(RandomUtil.getAreaNum(verbBegin, verbEnd));
             String noun = this.nickNameNounMap.get(RandomUtil.getAreaNum(nounBegin, nounEnd));
             user.setNickName(verb + noun);
         }
-        if(null==user.getSex()){
+        if (null == user.getSex()) {
             user.setSex(SexEnum.getEnum(RandomUtil.getAreaNum(0, 1)).getCode());
         }
         return user;
     }
-
+    
     @Override
-    public Map<String, Object> updateUserInfo(Integer userId, String nickName, String headerUrl, Integer sex) {
+    public User getUserByDeviceId(String deviceId){
+        return this.userDao.getUserByDeviceId(deviceId);
+    }
+    
+    @Override
+    public Map<String,Object> registerUser(User user){
+        this.userDao.insertUser(user);
+        return ResultUtil.successMap();
+    }
+    
+    @Override
+    public Map<String,Object> updateUserLastLoginTime(User user){
+        this.userDao.updateUserById(user);
+        return ResultUtil.successMap();
+    }
+    
+    @Override
+    public Map<String, Object> updateUserInfo(Integer userId, String nickName, String headerUrl,
+                                              Integer sex) {
         User user = new User(userId, nickName, headerUrl, sex);
         int flag = this.userDao.updateUserById(user);
-        if(flag>0){
+        if (flag > 0) {
             return ResultUtil.successMap();
-        }else{
-            return ResultUtil.updateFailMap();
+        } else {
+            return ResultUtil.failMap(ReturnCodeEnum.UPDATE_FAIL);
         }
     }
-
+    
     @Override
-    public List<UserFire> fireList(BigDecimal north, BigDecimal south, BigDecimal west,
-                                   BigDecimal east) {
-        return null;
+    public List<UserFire> fireList(BigDecimal distance, BigDecimal eastLatitude,
+                                   BigDecimal northLatitude) {
+        Map<String, Object> map = MapUtil.getAround(eastLatitude.toString(), northLatitude.toString(), distance.toString());
+        double minLat = (double)map.get("minLat");
+        double maxLat = (double)map.get("maxLat");
+        double minLng = (double)map.get("minLng");
+        double maxLng = (double)map.get("maxLng");
+        List<UserFire> list = this.userDao.getUserFiresByLatitude(minLat, maxLat, minLng, maxLng);
+        if(CollectionUtils.isEmpty(list)){
+            list = this.userDao.getUserFiresByPage(0, 10);//兜底用，如果当前用户坐标没数据就返回最热门的数据
+        }
+        List<UserFire> enList = new ArrayList<UserFire>();
+        for(UserFire uf : list){
+            String content = CodeUtil.encode(uf.getFireReason());
+            uf.setFireReason(content);
+            String address = CodeUtil.encode(FROM + uf.getAddress());
+            uf.setAddress(address);
+            enList.add(uf);
+        }
+        return enList;
     }
-
+    
     @Override
-    public Map<String, Object> fire(Integer userId, String content, String imgUrl) {
-        return null;
+    public Map<String, Object> fire(UserFire userFire) {
+        this.userDao.insertUserFire(userFire);
+        return ResultUtil.successMap();
     }
-
+    
     @Override
-    public Map<String, Object> comment(Integer userId, String comment) {
-        return null;
+    public Map<String, Object> comment(UserFireComment userFireComment) {
+        this.userDao.insertUserFireComment(userFireComment);
+        return ResultUtil.successMap();
     }
-
+    
+    @Override
+    public List<UserFireComment> commentList(Integer fireId,Integer pageOffset,Integer pageSize){
+        List<UserFireComment> list = this.userDao.getUserFireCommentsByPage(fireId,pageOffset,pageSize);
+        if(!CollectionUtils.isEmpty(list)){
+            List<UserFireComment> enList = new ArrayList<UserFireComment>();
+            for(UserFireComment ufc : list){
+                String comment = CodeUtil.encode(ufc.getContent());
+                ufc.setContent(comment);
+                String address = CodeUtil.encode(FROM + ufc.getAddress());
+                ufc.setAddress(address);
+                enList.add(ufc);
+            }
+            return enList;
+        }
+        return list;
+    }
+    
     @Override
     public Map<String, Object> praise(Integer userId) {
         return null;
     }
 
+    @Override
+    public Map<String, Object> step(Integer userId) {
+        return null;
+    }
+    
 }

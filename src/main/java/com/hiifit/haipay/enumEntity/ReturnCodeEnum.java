@@ -17,6 +17,8 @@ public enum ReturnCodeEnum {
     SUCCESS(200, "响应正常"), 
     NOT_EXISTS(404, "数据不存在"),
     UPDATE_FAIL(500, "更新失败"),
+    ILLEGAL_ARGUMENT(510, "参数错误或者缺少必要参数"),
+    SYSTEM_ERROR(555, "系统异常"),
     ;
     
     private Integer code;

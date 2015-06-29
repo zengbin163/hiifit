@@ -10,8 +10,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 /** 
-* @ClassName: MapDistance 
-* @Description: TODO
+* @ClassName: MapUtil 
+* @Description: 地图工具包
 * @author bin
 * @date 2015年6月23日 下午4:03:32 
 */
@@ -49,11 +49,6 @@ public class MapUtil {
     
     /**
      * 获取当前用户一定距离以内的经纬度值
-     * 单位米 return minLat
-     * 最小经度 minLng
-     * 最小纬度 maxLat
-     * 最大经度 maxLng
-     * 最大纬度 minLat
      */
     public static Map<String, Object> getAround(String latStr, String lngStr, String raidus) {
         Map<String, Object> map = new HashMap<String, Object>();
@@ -66,27 +61,30 @@ public class MapUtil {
             .replace("-", ""));
         Double dpmLng = 1 / mpdLng;
         Double radiusLng = dpmLng * raidusMile;
-        // 获取最小经度
-        Double minLat = longitude - radiusLng;
-        // 获取最大经度
-        Double maxLat = longitude + radiusLng;
+      
+        // 获取最小纬度
+        Double minLng = longitude - radiusLng;
+        // 获取最大纬度
+        Double maxLng = longitude + radiusLng;
+        map.put("minLng", minLng);
+        map.put("maxLng", maxLng);
+
         Double dpmLat = 1 / degree;
         Double radiusLat = dpmLat * raidusMile;
-        // 获取最小纬度
-        Double minLng = latitude - radiusLat;
-        // 获取最大纬度
-        Double maxLng = latitude + radiusLat;
-        map.put("minLat", minLat + "");
-        map.put("maxLat", maxLat + "");
-        map.put("minLng", minLng + "");
-        map.put("maxLng", maxLng + "");
+        // 获取最小经度
+        Double minLat = latitude - radiusLat;
+        // 获取最大经度
+        Double maxLat = latitude + radiusLat;
+        map.put("minLat", minLat);
+        map.put("maxLat", maxLat);
         return map;
     }
     
     public static void main(String[] args) {
-        double s = getDistance("120.026740", "30.286296","120.046314", "30.277489");
+        double s = getDistance("120.026740", "30.286296", "120.046314", "30.277489");
         System.out.println(s);
-        
+        Map<String, Object> map = getAround("120.020712", "30.284737", "600");
+        System.out.println(map.get("minLat") + "," + map.get("maxLat") + "," + map.get("minLng") + "," + map.get("maxLng"));
     }
     
 }

@@ -4,9 +4,9 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
-import com.hiifit.haipay.enumEntity.SexEnum;
 import com.hiifit.haipay.vo.User;
 import com.hiifit.haipay.vo.UserFire;
+import com.hiifit.haipay.vo.UserFireComment;
 
 public interface UserManager {
     /***
@@ -18,6 +18,35 @@ public interface UserManager {
      * @return id（用户id），nickName（昵称），headerUrl（头像URL），sex（性别）
      */
     User getByUserId(Integer userId);
+
+    /***
+     * 
+     * <pre>
+     *   返回用户基本信息
+     * </pre>
+     * @param deviceId（用户手机设备id）
+     * @return id（用户id），nickName（昵称），headerUrl（头像URL），sex（性别）
+     */
+    User getUserByDeviceId(String deviceId);
+    
+    /**
+     * 
+     * <pre>
+     *   注册用户
+     * </pre>
+     * @param user
+     */
+    Map<String,Object> registerUser(User user);
+    
+    /**
+     * 
+     * <pre>
+     *   更新用户最新登录时间
+     * </pre>
+     * @param user
+     * @return
+     */
+    Map<String,Object> updateUserLastLoginTime(User user);
     
     /***
      * <pre>
@@ -34,16 +63,15 @@ public interface UserManager {
     /**
      * 
      * <pre>
-     *   查询东西南北坐标范围内的怒火
+     *   查询以当前用户坐标为焦点方圆几公里内的怒火
      * </pre>
-     * @param north（北方坐标）
-     * @param south（南方坐标）
-     * @param west（西方坐标）
-     * @param east（东方坐标）
+     * @param distance（方圆多少M，单位是M）
+     * @param eastLatitude（东经坐标值）
+     * @param northLatitude（北纬坐标值）
      * @return eastLatitude（东经坐标值），northLatitude（北纬坐标值），userId（怒火发表人），nickName（怒火发表人昵称），headerUrl（头像URL）
      * fireValue（怒值），fireReason（怒因），firePraiseCount（点赞数），fireStepCount（点踩数），fireComCount（评论数）
      */
-    List<UserFire> fireList(BigDecimal north, BigDecimal south, BigDecimal west, BigDecimal east);
+    List<UserFire> fireList(BigDecimal distance, BigDecimal eastLatitude, BigDecimal northLatitude);
     
     /***
      * 
@@ -55,7 +83,7 @@ public interface UserManager {
      * @param imgUrl（图片URL）
      * @return 返回成功code 200
      */
-    Map<String,Object> fire(Integer userId,String content,String imgUrl);
+    Map<String, Object> fire(UserFire userFire);
     
     /**
      * 
@@ -66,7 +94,17 @@ public interface UserManager {
      * @param comment（评论内容）
      * @return 返回成功code 200
      */
-    Map<String,Object> comment(Integer userId,String comment);
+    Map<String,Object> comment(UserFireComment userFireComment);
+    
+    /**
+     * 
+     * <pre>
+     *   查询用户评论列表
+     * </pre>
+     * @param fireId（火焰d）
+     * @return
+     */
+    List<UserFireComment> commentList(Integer fireId,Integer pageOffset,Integer pageSize);
     
     /***
      * <pre>
@@ -76,4 +114,13 @@ public interface UserManager {
      * @return 返回成功code 200
      */
     Map<String,Object> praise(Integer userId);
+
+    /***
+     * <pre>
+     *    用户点踩或者取消点踩
+     * </pre>
+     * @param userId（用户id）
+     * @return 返回成功code 200
+     */
+    Map<String,Object> step(Integer userId);
 }

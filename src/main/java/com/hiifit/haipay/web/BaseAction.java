@@ -28,9 +28,12 @@ import com.opensymphony.xwork2.Preparable;
 public abstract class BaseAction extends ActionSupport implements ServletRequestAware,ServletResponseAware, Preparable {
    
     private static final long serialVersionUID = 3264789333544841923L;
+    
     protected HttpServletRequest request;
     protected HttpServletResponse response;
     protected  Object result;
+    
+    protected static final int DEFAULT_VALUE = 0;
     
     protected void returnFastJSON(Object obj) {
         if(obj != null){

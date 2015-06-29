@@ -13,7 +13,7 @@ import java.io.Serializable;
 * @Description: 用户随机头像
 * @date 2015年6月23日 上午10:57:43 
 */
-public class UserLogo implements Serializable {
+public class UserLogo extends BaseVo implements Serializable {
 
     private static final long serialVersionUID = -8654585322511729274L;
     

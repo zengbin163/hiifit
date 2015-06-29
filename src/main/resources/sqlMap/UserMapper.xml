@@ -9,11 +9,36 @@
 		       password password,
 		       last_login_time lastLoginTime,
 		       header_url headerUrl,
-		       sex sex
+		       sex sex,
+		       device_id deviceId
 		from t_hiifit_user
 		where id = #{userId}
 	</select>
-	
+	<select id="getUserByDeviceId" resultType="com.hiifit.haipay.vo.User">
+		select id id,
+			   nick_name nickName,
+			   mobile mobile,
+		       password password,
+		       last_login_time lastLoginTime,
+		       header_url headerUrl,
+		       sex sex,
+		       device_id deviceId
+		from t_hiifit_user
+		where device_id = #{deviceId}
+	</select>
+	<insert id="insertUser" parameterType="com.hiifit.haipay.vo.User">
+		insert into t_hiifit_user(
+			register_time,
+		    last_login_time,
+		    modify_time,
+		    device_id
+		)values(
+			now(),
+			now(),
+			now(),
+			#{deviceId}		
+		)
+	</insert>
 	<select id="getAllUserLogo" resultType="com.hiifit.haipay.vo.UserLogo">
 		select id id,
 		       header_url headerUrl
@@ -41,9 +66,137 @@
 			<if test="sex!=null">
 				,sex=#{sex,jdbcType=INTEGER}
 			</if>
+			<if test="lastLoginTime!=null">
+				,last_login_time=#{lastLoginTime}
+			</if>
 		<where>
 			<if test="id!=null" >id=#{id,jdbcType=INTEGER}</if>
 			<if test="id==null">1=0</if>
 		</where>
 	</update>
+	
+	<sql id="getUserFiresSelect">
+		select t1.id id,
+			t1.user_id userId,
+			t1.fire_reason fireReason,
+			t1.fire_value fireValue,
+			t1.fire_praise_count firePraiseCount,
+			t1.fire_step_count fireStepCount,
+			t1.fire_com_count fireComCount,
+			t1.create_date createDate,
+			t1.create_time createTime,
+			t1.modify_time modifyTime,
+			t1.east_latitude eastLatitude,
+			t1.north_latitude northLatitude,
+			t1.map_level mapLevel,
+			t1.pic_url picUrl,
+			t1.address address,
+		  	t2.nick_name nickName,
+		  	t2.header_url headerUrl,
+		  	t2.sex sex
+		from t_hiifit_user_fire t1,t_hiifit_user t2
+		where t1.user_id=t2.id
+	</sql>
+	<sql id="getUserFiresOrderBy">
+		order by t1.fire_praise_count desc,t1.fire_com_count desc      
+	</sql>
+	<select id="getUserFiresByLatitude" resultType="com.hiifit.haipay.vo.UserFire">
+          <include refid="getUserFiresSelect"></include>
+		      <![CDATA[ 
+		      	and t1.east_latitude>#{minLat} and t1.east_latitude<#{maxLat}
+		      	and t1.north_latitude>#{minLng} and t1.north_latitude<#{maxLng}
+		       ]]>
+          <include refid="getUserFiresOrderBy"></include>
+	</select>
+
+    <select id="getUserFiresByPage" resultType="com.hiifit.haipay.vo.UserFire">
+          <include refid="getUserFiresSelect"></include>
+          <include refid="getUserFiresOrderBy"></include>
+		  limit #{pageOffset},#{pageSize}
+    </select>	
+	
+	<select id="getUserFiresCountByLatitude" resultType="int">
+		select count(*) 
+		from t_hiifit_user_fire t1,t_hiifit_user t2 
+		where t1.user_id=t2.id 
+	</select>
+	
+	<insert id="insertUserFire" parameterType="com.hiifit.haipay.vo.UserFire">
+		insert into t_hiifit_user_fire(
+			user_id,
+			fire_reason,
+			fire_value,
+			fire_praise_count,
+			fire_step_count,
+			fire_com_count,
+			create_date,
+			create_time,
+			modify_time,
+			east_latitude,
+			north_latitude,
+			map_level,
+			pic_url,
+			address
+		)values(
+			#{userId},
+			#{fireReason},
+			#{fireValue},
+			#{firePraiseCount},
+			#{fireStepCount},
+			#{fireComCount},
+			CURDATE(),
+			NOW(),
+			NOW(),
+			#{eastLatitude},
+			#{northLatitude},
+			#{mapLevel},
+			#{picUrl},
+			#{address}
+		)
+	</insert>
+	
+	<insert id="insertUserFireComment" parameterType="com.hiifit.haipay.vo.UserFireComment">
+		insert into t_hiifit_user_fire_comment(
+			fire_id,
+			user_id,
+			follower_id,
+			author_id,
+			content,
+			flag,
+			create_time,
+			east_latitude,
+			north_latitude,
+			address
+		)values(
+			#{fireId},
+			#{userId},
+			#{followerId},
+			#{authorId},
+			#{content},
+			0,
+			NOW(),
+			#{eastLatitude},
+			#{northLatitude},
+			#{address}
+		)
+	</insert>
+	
+	<select id="getUserFireCommentsByPage" resultType="com.hiifit.haipay.vo.UserFireComment">
+		select t1.id id,
+			t1.follower_id followerId,
+			t1.content content,
+			t1.create_time createTime,
+			t1.east_latitude eastLatitude,
+			t1.north_latitude northLatitude,
+			t1.address address,
+			t1.flag flag,
+			t2.nick_name nickName,
+			t2.header_url headerUrl,
+			t2.sex sex
+		from t_hiifit_user_fire_comment t1,t_hiifit_user t2
+		where t1.follower_id=t2.id
+		      and t1.fire_id = #{fireId}
+ 	    order by t1.create_time DESC
+		limit #{pageOffset},#{pageSize}
+	</select>
 </mapper>

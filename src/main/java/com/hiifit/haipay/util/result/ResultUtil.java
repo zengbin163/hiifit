@@ -20,6 +20,7 @@ import com.hiifit.haipay.enumEntity.ReturnCodeEnum;
 public class ResultUtil {
     
     public static final String RETURN_KEY = "recode";
+    public static final String MSG = "msg";
     
     public static Map<String, Object> successMap() {
         Map<String, Object> map = new HashMap<String, Object>();
@@ -27,9 +28,10 @@ public class ResultUtil {
         return map;
     }
 
-    public static Map<String, Object> updateFailMap() {
+    public static Map<String, Object> failMap(ReturnCodeEnum returnCode) {
         Map<String, Object> map = new HashMap<String, Object>();
-        map.put(RETURN_KEY, ReturnCodeEnum.UPDATE_FAIL.getCode());
+        map.put(RETURN_KEY, returnCode.getCode());
+        map.put(MSG, returnCode.getString());
         return map;
     }
     

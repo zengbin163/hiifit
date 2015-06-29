@@ -13,7 +13,7 @@ import java.io.Serializable;
 * @Description: 用户昵称动词
 * @date 2015年6月23日 上午10:57:43 
 */
-public class UserVerb implements Serializable {
+public class UserVerb extends BaseVo implements Serializable {
     
     private static final long serialVersionUID = -7983128570382845091L;
     private Integer id;

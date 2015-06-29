@@ -1,8 +1,9 @@
 package com.hiifit.haipay.vo;
 
 import java.io.Serializable;
+import java.util.Date;
 
-public class User implements Serializable {
+public class User extends BaseVo implements Serializable {
     
     private static final long serialVersionUID = -6723648415687712333L;
     
@@ -14,11 +15,13 @@ public class User implements Serializable {
     
     private String password;
     
-    private String lastLoginTime;
+    private Date lastLoginTime;
     
     private String headerUrl;
     
     private Integer sex;
+    
+    private String deviceId;
     
     public User() {
     }
@@ -59,11 +62,11 @@ public class User implements Serializable {
         this.password = password;
     }
     
-    public String getLastLoginTime() {
+    public Date getLastLoginTime() {
         return lastLoginTime;
     }
     
-    public void setLastLoginTime(String lastLoginTime) {
+    public void setLastLoginTime(Date lastLoginTime) {
         this.lastLoginTime = lastLoginTime;
     }
     
@@ -90,5 +93,12 @@ public class User implements Serializable {
     public void setSex(Integer sex) {
         this.sex = sex;
     }
-    
+
+    public String getDeviceId() {
+        return deviceId;
+    }
+
+    public void setDeviceId(String deviceId) {
+        this.deviceId = deviceId;
+    }
 }
