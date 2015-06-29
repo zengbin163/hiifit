@@ -7,6 +7,8 @@ import org.apache.ibatis.annotations.Param;
 import com.hiifit.haipay.vo.User;
 import com.hiifit.haipay.vo.UserFire;
 import com.hiifit.haipay.vo.UserFireComment;
+import com.hiifit.haipay.vo.UserFirePraise;
+import com.hiifit.haipay.vo.UserFireStep;
 import com.hiifit.haipay.vo.UserLogo;
 import com.hiifit.haipay.vo.UserNoun;
 import com.hiifit.haipay.vo.UserVerb;
@@ -84,6 +86,15 @@ public interface UserDao extends IBaseDao<User> {
     public void insertUserFire(UserFire userFire);
     
     /**
+     * <pre>
+     *  查询火焰id查询用户火焰信息
+     * </pre>
+     * @param fireId
+     * @return
+     */
+    public UserFire getUserFireById(@Param(value = "fireId") Integer fireId);
+    
+    /**
      * 
      * <pre>
      *   查询四周用户发布的火焰
@@ -130,4 +141,56 @@ public interface UserDao extends IBaseDao<User> {
      * @return
      */
     public List<UserFireComment> getUserFireCommentsByPage(@Param("fireId")int fireId,@Param("pageOffset")int pageOffset,@Param("pageSize")int pageSize);
+
+    /**
+     * <pre>
+     *     插入用户点赞信息表
+     * </pre>
+     * @param userFirePraise
+     */
+    public void insertUserFirePraise(UserFirePraise userFirePraise);
+
+    /**
+     * 
+     * <pre>
+     *     插入用户点踩信息表
+     * </pre>
+     * @param userFireStep
+     */
+    public void insertUserFireStep(UserFireStep userFireStep);
+    
+    /**
+     * 
+     * <pre>
+     *   查询用户点赞记录
+     * </pre>
+     * @param fireId
+     * @param userId
+     * @return
+     */
+    public UserFirePraise getUserFirePraiseByFireId(@Param("fireId")int fireId,@Param("userId")int userId);
+
+    /**
+     * 
+     * <pre>
+     *   查询用户点踩记录
+     * </pre>
+     * @param fireId
+     * @param userId
+     * @return
+     */
+    public UserFireStep getUserFireStepByFireId(@Param("fireId")int fireId,@Param("userId")int userId);
+
+    public int updateUserFirePraiseByFireId(UserFirePraise userFirePraise);
+    
+    public int updateUserFireStepByFireId(UserFireStep userFireStep);
+    
+    /**
+     * <pre>
+     *     更新用户火焰表相关count统计
+     * </pre>
+     * @param userFire
+     * @return
+     */
+    public int updateUserFireCountById(UserFire userFire);
 }

@@ -17,6 +17,8 @@ import com.hiifit.haipay.util.math.CodeUtil;
 import com.hiifit.haipay.vo.User;
 import com.hiifit.haipay.vo.UserFire;
 import com.hiifit.haipay.vo.UserFireComment;
+import com.hiifit.haipay.vo.UserFirePraise;
+import com.hiifit.haipay.vo.UserFireStep;
 
 
 /** 
@@ -207,9 +209,16 @@ public class UserAction extends BaseAction{
      *  点赞
      * </pre>
      * @param fireId（火焰id）
+     * @param userId（用户id）
      * @return 返回成功code 200
      */
     public String praise(){
+        Integer fireId = ParamUtil.getIntParameter(request, "fireId", null);
+        Assert.notNull(fireId);
+        Integer userId = ParamUtil.getIntParameter(request, "userId", null);
+        Assert.notNull(userId);
+        UserFirePraise userFirePraise = new UserFirePraise(fireId, userId);
+        returnFastJSON(this.userManager.praise(userFirePraise));
         return null;
     }
     
@@ -218,9 +227,16 @@ public class UserAction extends BaseAction{
      *  点踩
      * </pre>
      * @param fireId（火焰id）
+     * @param userId（用户id）
      * @return 返回成功code 200
      */
     public String step(){
+        Integer fireId = ParamUtil.getIntParameter(request, "fireId", null);
+        Assert.notNull(fireId);
+        Integer userId = ParamUtil.getIntParameter(request, "userId", null);
+        Assert.notNull(userId);
+        UserFireStep userFireStep = new UserFireStep(fireId, userId);
+        returnFastJSON(this.userManager.step(userFireStep));
         return null;
     }
 }

@@ -7,6 +7,8 @@ import java.util.Map;
 import com.hiifit.haipay.vo.User;
 import com.hiifit.haipay.vo.UserFire;
 import com.hiifit.haipay.vo.UserFireComment;
+import com.hiifit.haipay.vo.UserFirePraise;
+import com.hiifit.haipay.vo.UserFireStep;
 
 public interface UserManager {
     /***
@@ -113,7 +115,7 @@ public interface UserManager {
      * @param userId（用户id）
      * @return 返回成功code 200
      */
-    Map<String,Object> praise(Integer userId);
+    Map<String,Object> praise(UserFirePraise userFirePraise);
 
     /***
      * <pre>
@@ -122,5 +124,5 @@ public interface UserManager {
      * @param userId（用户id）
      * @return 返回成功code 200
      */
-    Map<String,Object> step(Integer userId);
+    Map<String,Object> step(UserFireStep userFireStep);
 }

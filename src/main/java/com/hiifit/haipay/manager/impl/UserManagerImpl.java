@@ -10,10 +10,12 @@ import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import com.hiifit.haipay.dao.UserDao;
+import com.hiifit.haipay.enumEntity.FlagEnum;
 import com.hiifit.haipay.enumEntity.ReturnCodeEnum;
 import com.hiifit.haipay.enumEntity.SexEnum;
 import com.hiifit.haipay.manager.UserManager;
@@ -24,6 +26,8 @@ import com.hiifit.haipay.util.result.ResultUtil;
 import com.hiifit.haipay.vo.User;
 import com.hiifit.haipay.vo.UserFire;
 import com.hiifit.haipay.vo.UserFireComment;
+import com.hiifit.haipay.vo.UserFirePraise;
+import com.hiifit.haipay.vo.UserFireStep;
 import com.hiifit.haipay.vo.UserLogo;
 import com.hiifit.haipay.vo.UserNoun;
 import com.hiifit.haipay.vo.UserVerb;
@@ -150,6 +154,14 @@ public class UserManagerImpl implements UserManager {
     @Override
     public Map<String, Object> comment(UserFireComment userFireComment) {
         this.userDao.insertUserFireComment(userFireComment);
+        UserFire userFire = this.userDao.getUserFireById(userFireComment.getFireId());
+        Assert.notNull(userFire);
+        int version = userFire.getVersion() + 1;
+        int comm = userFire.getFireComCount() + 1;
+        userFire.setVersion(version);
+        userFire.setFireComCount(comm);
+        userFire.setCommentIsolation(true);
+        this.userDao.updateUserFireCountById(userFire);
         return ResultUtil.successMap();
     }
     
@@ -171,13 +183,84 @@ public class UserManagerImpl implements UserManager {
     }
     
     @Override
-    public Map<String, Object> praise(Integer userId) {
-        return null;
+    public Map<String, Object> praise(UserFirePraise userFirePraise) {
+        UserFirePraise ufp= this.userDao.getUserFirePraiseByFireId(userFirePraise.getFireId(), userFirePraise.getUserId());
+        UserFire userFire = this.userDao.getUserFireById(userFirePraise.getFireId());
+        Assert.notNull(userFire);
+        if(null==ufp){
+            this.userDao.insertUserFirePraise(userFirePraise);
+            increasePraise(userFire);
+        }else{
+            int flag = ufp.getFlag();
+            if(FlagEnum.BE_DELETED.getCode().equals(flag)){
+                flag = FlagEnum.BE_READED.getCode();
+                increasePraise(userFire);
+            }else{
+                flag = FlagEnum.BE_DELETED.getCode();
+                decreasePraise(userFire);
+            }
+            userFirePraise.setFlag(flag);
+            this.userDao.updateUserFirePraiseByFireId(userFirePraise);
+        }
+        return ResultUtil.successMap();
     }
 
     @Override
-    public Map<String, Object> step(Integer userId) {
-        return null;
+    public Map<String, Object> step(UserFireStep userFireStep) {
+        UserFirePraise ufp= this.userDao.getUserFirePraiseByFireId(userFireStep.getFireId(), userFireStep.getUserId());
+        UserFire userFire = this.userDao.getUserFireById(userFireStep.getFireId());
+        Assert.notNull(userFire);
+        if(null==ufp){
+            this.userDao.insertUserFireStep(userFireStep);
+            increaseStep(userFire);
+        }else{
+            int flag = ufp.getFlag();
+            if(FlagEnum.BE_DELETED.getCode().equals(flag)){
+                flag = FlagEnum.BE_READED.getCode();
+                increaseStep(userFire);
+            }else{
+                flag = FlagEnum.BE_DELETED.getCode();
+                decreaseStep(userFire);
+            }
+            userFireStep.setFlag(flag);
+            this.userDao.updateUserFireStepByFireId(userFireStep);
+        }
+        return ResultUtil.successMap();
     }
     
+    private void increasePraise(UserFire userFire){
+        int version = userFire.getVersion() + 1;
+        int praise = userFire.getFirePraiseCount() + 1;
+        userFire.setVersion(version);
+        userFire.setFirePraiseCount(praise);
+        userFire.setPraiseIsolation(true);
+        this.userDao.updateUserFireCountById(userFire);
+    }
+    
+    private void  decreasePraise(UserFire userFire){
+        int version = userFire.getVersion() + 1;
+        int praise = userFire.getFirePraiseCount()>0?userFire.getFirePraiseCount() - 1:userFire.getFirePraiseCount();
+        userFire.setVersion(version);
+        userFire.setFirePraiseCount(praise);
+        userFire.setPraiseIsolation(true);
+        this.userDao.updateUserFireCountById(userFire);
+    }
+    
+    private void increaseStep(UserFire userFire){
+        int version = userFire.getVersion() + 1;
+        int Step = userFire.getFireStepCount() + 1;
+        userFire.setVersion(version);
+        userFire.setFireStepCount(Step);
+        userFire.setStepIsolation(true);
+        this.userDao.updateUserFireCountById(userFire);
+    }
+    
+    private void  decreaseStep(UserFire userFire){
+        int version = userFire.getVersion() + 1;
+        int Step = userFire.getFireStepCount()>0?userFire.getFireStepCount()-1:userFire.getFireStepCount();
+        userFire.setVersion(version);
+        userFire.setFireStepCount(Step);
+        userFire.setStepIsolation(true);
+        this.userDao.updateUserFireCountById(userFire);
+    }
 }

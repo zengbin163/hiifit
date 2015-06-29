@@ -39,6 +39,11 @@ public class UserFire extends BaseVo implements Serializable {
     private Integer sex;
     private String address;
     
+    /**用于评论数、点赞数、点踩数更新作隔离**/
+    private boolean commentIsolation = false;
+    private boolean praiseIsolation = false;
+    private boolean stepIsolation = false;
+    
     public UserFire() {
         
     }
@@ -203,4 +208,27 @@ public class UserFire extends BaseVo implements Serializable {
         this.address = address;
     }
     
+    public boolean isCommentIsolation() {
+        return commentIsolation;
+    }
+    
+    public void setCommentIsolation(boolean commentIsolation) {
+        this.commentIsolation = commentIsolation;
+    }
+    
+    public boolean isPraiseIsolation() {
+        return praiseIsolation;
+    }
+    
+    public void setPraiseIsolation(boolean praiseIsolation) {
+        this.praiseIsolation = praiseIsolation;
+    }
+    
+    public boolean isStepIsolation() {
+        return stepIsolation;
+    }
+    
+    public void setStepIsolation(boolean stepIsolation) {
+        this.stepIsolation = stepIsolation;
+    }
 }
