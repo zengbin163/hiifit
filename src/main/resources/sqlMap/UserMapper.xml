@@ -81,23 +81,7 @@
 		</where>
 	</update>
 	<select id="getUserFireById" resultType="com.hiifit.haipay.vo.UserFire">
-		select t1.id id,
-			t1.user_id userId,
-			t1.fire_reason fireReason,
-			t1.fire_value fireValue,
-			t1.fire_praise_count firePraiseCount,
-			t1.fire_step_count fireStepCount,
-			t1.fire_com_count fireComCount,
-			t1.create_date createDate,
-			t1.create_time createTime,
-			t1.modify_time modifyTime,
-			t1.east_latitude eastLatitude,
-			t1.north_latitude northLatitude,
-			t1.map_level mapLevel,
-			t1.pic_url picUrl,
-			t1.address address,
-			t1.version version
-		from t_hiifit_user_fire t1
+	    <include refid="getUserFiresSelect"></include>
 		where t1.id = #{fireId}	
 	</select>	
 	<sql id="getUserFiresSelect">

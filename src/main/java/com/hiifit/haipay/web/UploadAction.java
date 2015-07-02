@@ -29,6 +29,15 @@ public class UploadAction extends BaseAction {
      */
     private static final int[] types = { 1, 2 };
     
+    /**
+     * <pre>
+     *   上传图片，返回图片路径
+     * </pre>
+     * @param type（图片类型    1:头像     2:微博图片 ）
+     * @param userId（用户id ）
+     * @return  图片路径（_R原图     _M缩略图）
+     * @throws Exception
+     */
     public String upload() throws Exception {
         String filePath = StringUtils.EMPTY, fileType, imgUrl;
         Map<String, Object> rtnMap = Maps.newHashMap();

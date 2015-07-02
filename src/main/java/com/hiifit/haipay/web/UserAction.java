@@ -14,6 +14,7 @@ import org.springframework.util.Assert;
 import com.cmcc.common.util.ParamUtil;
 import com.hiifit.haipay.manager.UserManager;
 import com.hiifit.haipay.util.math.CodeUtil;
+import com.hiifit.haipay.util.math.FireUtil;
 import com.hiifit.haipay.vo.User;
 import com.hiifit.haipay.vo.UserFire;
 import com.hiifit.haipay.vo.UserFireComment;
@@ -147,9 +148,9 @@ public class UserAction extends BaseAction {
         String address = ParamUtil.getStringParameter(request, "address", null);
         String content = CodeUtil.decode(fireReason);
         String tagIds = ParamUtil.getStringParameter(request, "tagIds", null);
-        UserFire userFire = new UserFire(userId, content, content.length(), DEFAULT_VALUE,
-            DEFAULT_VALUE, DEFAULT_VALUE, new BigDecimal(eastLatitude), new BigDecimal(
-                northLatitude), mapLevel, picUrl1, picUrl2, picUrl3, picUrl4,
+        UserFire userFire = new UserFire(userId, content, FireUtil.getFireValue(content),
+            DEFAULT_VALUE, DEFAULT_VALUE, DEFAULT_VALUE, new BigDecimal(eastLatitude),
+            new BigDecimal(northLatitude), mapLevel, picUrl1, picUrl2, picUrl3, picUrl4,
             CodeUtil.decode(address), tagIds);
         returnFastJSON(this.userManager.fire(userFire));
         return null;
@@ -160,14 +161,16 @@ public class UserAction extends BaseAction {
      *     根据火焰id查询火焰详情
      * </pre>
      * @param fireId（火焰id）
-     * @return fireReason
-     *         fireValue
-     *         firePraiseCount
-     *         fireStepCount
-     *         fireComCount
-     *         eastLatitude
-     *         northLatitude
-     *         
+     * @return fireReason（怒因）
+     *         fireValue（怒值）
+     *         firePraiseCount（点赞数）
+     *         fireStepCount（点踩数）
+     *         fireComCount（评论数）
+     *         eastLatitude（东经）
+     *         northLatitude（北纬）
+     *         userId（怒火发表人）
+     *         nickName（怒火发表人昵称）
+     *         headerUrl（头像URL）
      */
     public String getFire() {
         Integer fireId = ParamUtil.getIntParameter(request, "fireId", null);
