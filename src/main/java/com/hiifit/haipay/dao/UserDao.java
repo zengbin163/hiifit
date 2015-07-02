@@ -9,8 +9,10 @@ import com.hiifit.haipay.vo.UserFire;
 import com.hiifit.haipay.vo.UserFireComment;
 import com.hiifit.haipay.vo.UserFirePraise;
 import com.hiifit.haipay.vo.UserFireStep;
+import com.hiifit.haipay.vo.UserFireTag;
 import com.hiifit.haipay.vo.UserLogo;
 import com.hiifit.haipay.vo.UserNoun;
+import com.hiifit.haipay.vo.UserTag;
 import com.hiifit.haipay.vo.UserVerb;
 
 /**
@@ -67,6 +69,14 @@ public interface UserDao extends IBaseDao<User> {
      */
     public List<UserNoun> getAllUserNoun();
     
+    /***
+     * <pre>
+     *  查询所有配置的标签
+     * </pre>
+     * @return
+     */
+    public List<UserTag> getAllUserTag();
+    
     /**
      * <pre>
      * 更新用户信息  
@@ -83,7 +93,7 @@ public interface UserDao extends IBaseDao<User> {
      * </pre>
      * @param user
      */
-    public void insertUserFire(UserFire userFire);
+    public Integer insertUserFire(UserFire userFire);
     
     /**
      * <pre>
@@ -93,6 +103,15 @@ public interface UserDao extends IBaseDao<User> {
      * @return
      */
     public UserFire getUserFireById(@Param(value = "fireId") Integer fireId);
+
+    /**
+     * <pre>
+     *  查询怒火火焰的标签信息
+     * </pre>
+     * @param fireId
+     * @return
+     */
+    public List<UserTag> getFireTagsByFireId(@Param(value = "fireId") Integer fireId);
     
     /**
      * 
@@ -158,6 +177,14 @@ public interface UserDao extends IBaseDao<User> {
      * @param userFireStep
      */
     public void insertUserFireStep(UserFireStep userFireStep);
+
+    /**
+     * <pre>
+     *     插入用户标签
+     * </pre>
+     * @param userFireTag
+     */
+    public void insertUserFireTag(UserFireTag userFireTag);
     
     /**
      * 

@@ -9,6 +9,7 @@ package com.hiifit.haipay.vo;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 /** 
 * @ClassName: UserFire 
@@ -33,16 +34,22 @@ public class UserFire extends BaseVo implements Serializable {
     private BigDecimal eastLatitude;
     private BigDecimal northLatitude;
     private Integer mapLevel;
-    private String picUrl;
+    private String picUrl1;
+    private String picUrl2;
+    private String picUrl3;
+    private String picUrl4;
     private String nickName;
     private String headerUrl;
     private Integer sex;
     private String address;
+    private String tagIds;// 标签id，通过逗号分隔
     
     /**用于评论数、点赞数、点踩数更新作隔离**/
     private boolean commentIsolation = false;
     private boolean praiseIsolation = false;
     private boolean stepIsolation = false;
+    
+    private List<UserTag> tagList;
     
     public UserFire() {
         
@@ -50,7 +57,8 @@ public class UserFire extends BaseVo implements Serializable {
     
     public UserFire(Integer userId, String fireReason, Integer fireValue, Integer firePraiseCount,
                     Integer fireStepCount, Integer fireComCount, BigDecimal eastLatitude,
-                    BigDecimal northLatitude, Integer mapLevel, String picUrl, String address) {
+                    BigDecimal northLatitude, Integer mapLevel, String picUrl1, String picUrl2,
+                    String picUrl3, String picUrl4, String address, String tagIds) {
         this.userId = userId;
         this.fireReason = fireReason;
         this.fireValue = fireValue;
@@ -60,8 +68,12 @@ public class UserFire extends BaseVo implements Serializable {
         this.eastLatitude = eastLatitude;
         this.northLatitude = northLatitude;
         this.mapLevel = mapLevel;
-        this.picUrl = picUrl;
+        this.picUrl1 = picUrl1;
+        this.picUrl2 = picUrl2;
+        this.picUrl3 = picUrl3;
+        this.picUrl4 = picUrl4;
         this.address = address;
+        this.tagIds = tagIds;
     }
     
     public Integer getId() {
@@ -168,12 +180,36 @@ public class UserFire extends BaseVo implements Serializable {
         this.mapLevel = mapLevel;
     }
     
-    public String getPicUrl() {
-        return picUrl;
+    public String getPicUrl1() {
+        return picUrl1;
     }
     
-    public void setPicUrl(String picUrl) {
-        this.picUrl = picUrl;
+    public void setPicUrl1(String picUrl1) {
+        this.picUrl1 = picUrl1;
+    }
+    
+    public String getPicUrl2() {
+        return picUrl2;
+    }
+    
+    public void setPicUrl2(String picUrl2) {
+        this.picUrl2 = picUrl2;
+    }
+    
+    public String getPicUrl3() {
+        return picUrl3;
+    }
+    
+    public void setPicUrl3(String picUrl3) {
+        this.picUrl3 = picUrl3;
+    }
+    
+    public String getPicUrl4() {
+        return picUrl4;
+    }
+    
+    public void setPicUrl4(String picUrl4) {
+        this.picUrl4 = picUrl4;
     }
     
     public String getNickName() {
@@ -231,4 +267,21 @@ public class UserFire extends BaseVo implements Serializable {
     public void setStepIsolation(boolean stepIsolation) {
         this.stepIsolation = stepIsolation;
     }
+    
+    public String getTagIds() {
+        return tagIds;
+    }
+    
+    public void setTagIds(String tagIds) {
+        this.tagIds = tagIds;
+    }
+    
+    public List<UserTag> getTagList() {
+        return tagList;
+    }
+    
+    public void setTagList(List<UserTag> tagList) {
+        this.tagList = tagList;
+    }
+    
 }

@@ -88,6 +88,15 @@ public interface UserManager {
     Map<String, Object> fire(UserFire userFire);
     
     /**
+     * <pre>
+     *    查询火焰信息 
+     * </pre>
+     * @param fireId
+     * @return
+     */
+    UserFire getUserFireById(Integer fireId);
+    
+    /**
      * 
      * <pre>
      *    发表评论
@@ -125,4 +134,12 @@ public interface UserManager {
      * @return 返回成功code 200
      */
     Map<String,Object> step(UserFireStep userFireStep);
+    
+    /**
+     * <pre>
+     *    查询所有tag标签
+     * </pre>
+     * @return
+     */
+    Map<Integer,String> getAllTag();
 }

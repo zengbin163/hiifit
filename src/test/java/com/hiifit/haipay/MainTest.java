@@ -6,8 +6,11 @@
  */
 package com.hiifit.haipay;
 
-import java.math.BigDecimal;
 import java.text.ParseException;
+import java.util.HashMap;
+import java.util.Map;
+
+import com.alibaba.fastjson.JSONObject;
 
 /** 
 * @ClassName: MainTest 
@@ -17,7 +20,11 @@ import java.text.ParseException;
 */
 public class MainTest {
     public static void main(String[] args) throws ParseException {
-            System.out.println(new BigDecimal("120.132121").toString());
+        Map<Integer,String> map = new HashMap<Integer,String>();
+        map.put(1, "亲爱的");
+        map.put(2, "我爱你");
+        
+        System.out.println(JSONObject.toJSON(map));
     }
 }
 

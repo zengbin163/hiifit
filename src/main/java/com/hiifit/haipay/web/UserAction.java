@@ -1,8 +1,8 @@
 /*
-*@Project: GZJK
-*@Author: bin
-*@Date: 2015年6月19日
-*@Copyright: 2000-2015 CMCC . All rights reserved.
+ * @Project: GZJK
+ * @Author: bin
+ * @Date: 2015年6月19日
+ * @Copyright: 2000-2015 CMCC . All rights reserved.
  */
 package com.hiifit.haipay.web;
 
@@ -20,19 +20,17 @@ import com.hiifit.haipay.vo.UserFireComment;
 import com.hiifit.haipay.vo.UserFirePraise;
 import com.hiifit.haipay.vo.UserFireStep;
 
-
 /** 
 * @ClassName: UserAction 
 * @Description: 
 * @author bin
 * @date 2015年6月19日 上午11:21:51 
 */
-public class UserAction extends BaseAction{
+public class UserAction extends BaseAction {
     private static final long serialVersionUID = -7879690191783260314L;
-
+    
     @Autowired
     protected UserManager userManager;
-    
     
     /***
      * 
@@ -42,7 +40,7 @@ public class UserAction extends BaseAction{
      * @param deviceId（用户手机设备id）
      * @return id（用户id），nickName（昵称），headerUrl（头像URL），sex（性别）
      */
-    public String index(){
+    public String index() {
         String deviceId = ParamUtil.getStringParameter(request, "deviceId", null);
         Assert.notNull(deviceId);
         User user = userManager.getUserByDeviceId(deviceId);
@@ -57,7 +55,7 @@ public class UserAction extends BaseAction{
      * @param userId（用户id）
      * @return id（用户id），nickName（昵称），headerUrl（头像URL），sex（性别）
      */
-    public String userInfo(){
+    public String userInfo() {
         Integer userId = ParamUtil.getIntParameter(request, "userId", null);
         Assert.notNull(userId);
         User user = userManager.getByUserId(userId);
@@ -75,7 +73,7 @@ public class UserAction extends BaseAction{
      * @param sex（性别：0女性，1男性）
      * @return 成功返回recode=200，失败返回recode=500
      */
-    public String updateUserInfo(){
+    public String updateUserInfo() {
         Integer userId = ParamUtil.getIntParameter(request, "userId", null);
         Assert.notNull(userId);
         String nickName = ParamUtil.getStringParameter(request, "nickName", null);
@@ -105,14 +103,15 @@ public class UserAction extends BaseAction{
      *         fireComCount（评论数）
      *         address（来自#详细地址#）（decoding）
      */
-    public String fireList(){
-        String distance = ParamUtil.getStringParameter(request, "distance", null);//地图方圆几公里内的火焰
+    public String fireList() {
+        String distance = ParamUtil.getStringParameter(request, "distance", null);// 地图方圆几公里内的火焰
         Assert.notNull(distance);
-        String eastLatitude = ParamUtil.getStringParameter(request, "eastLatitude", null);//东经坐标
+        String eastLatitude = ParamUtil.getStringParameter(request, "eastLatitude", null);// 东经坐标
         Assert.notNull(eastLatitude);
-        String northLatitude = ParamUtil.getStringParameter(request, "northLatitude", null);//北纬
+        String northLatitude = ParamUtil.getStringParameter(request, "northLatitude", null);// 北纬
         Assert.notNull(northLatitude);
-        returnFastJSON(this.userManager.fireList(new BigDecimal(distance), new BigDecimal(eastLatitude), new BigDecimal(northLatitude)));
+        returnFastJSON(this.userManager.fireList(new BigDecimal(distance), new BigDecimal(
+            eastLatitude), new BigDecimal(northLatitude)));
         return null;
     }
     
@@ -130,25 +129,53 @@ public class UserAction extends BaseAction{
      * @param address（来自#详细地址#）（encoding）
      * @return 成功返回recode=200，失败抛异常
      */
-    public String fire(){
+    public String fire() {
         Integer userId = ParamUtil.getIntParameter(request, "userId", null);
         Assert.notNull(userId);
         Integer mapLevel = ParamUtil.getIntParameter(request, "mapLevel", null);
         Assert.notNull(mapLevel);
-        String fireReason = ParamUtil.getStringParameter(request, "fireReason", null);//输入内容
+        String fireReason = ParamUtil.getStringParameter(request, "fireReason", null);// 输入内容
         Assert.notNull(fireReason);
-        String eastLatitude = ParamUtil.getStringParameter(request, "eastLatitude", null);//东经坐标
+        String eastLatitude = ParamUtil.getStringParameter(request, "eastLatitude", null);// 东经坐标
         Assert.notNull(eastLatitude);
-        String northLatitude = ParamUtil.getStringParameter(request, "northLatitude", null);//北纬坐标
+        String northLatitude = ParamUtil.getStringParameter(request, "northLatitude", null);// 北纬坐标
         Assert.notNull(northLatitude);
-        String picUrl = ParamUtil.getStringParameter(request, "picUrl", null);
+        String picUrl1 = ParamUtil.getStringParameter(request, "picUrl1", null);
+        String picUrl2 = ParamUtil.getStringParameter(request, "picUrl2", null);
+        String picUrl3 = ParamUtil.getStringParameter(request, "picUrl3", null);
+        String picUrl4 = ParamUtil.getStringParameter(request, "picUrl4", null);
         String address = ParamUtil.getStringParameter(request, "address", null);
         String content = CodeUtil.decode(fireReason);
-        UserFire userFire = new UserFire(userId, content, content.length(), DEFAULT_VALUE, DEFAULT_VALUE, DEFAULT_VALUE, new BigDecimal(eastLatitude), new BigDecimal(northLatitude), mapLevel, picUrl, CodeUtil.decode(address));
+        String tagIds = ParamUtil.getStringParameter(request, "tagIds", null);
+        UserFire userFire = new UserFire(userId, content, content.length(), DEFAULT_VALUE,
+            DEFAULT_VALUE, DEFAULT_VALUE, new BigDecimal(eastLatitude), new BigDecimal(
+                northLatitude), mapLevel, picUrl1, picUrl2, picUrl3, picUrl4,
+            CodeUtil.decode(address), tagIds);
         returnFastJSON(this.userManager.fire(userFire));
         return null;
     }
- 
+    
+    /**
+     * <pre>
+     *     根据火焰id查询火焰详情
+     * </pre>
+     * @param fireId（火焰id）
+     * @return fireReason
+     *         fireValue
+     *         firePraiseCount
+     *         fireStepCount
+     *         fireComCount
+     *         eastLatitude
+     *         northLatitude
+     *         
+     */
+    public String getFire() {
+        Integer fireId = ParamUtil.getIntParameter(request, "fireId", null);
+        Assert.notNull(fireId);
+        returnFastJSON(this.userManager.getUserFireById(fireId));
+        return null;
+    }
+    
     /**
      * 
      * <pre>
@@ -160,7 +187,7 @@ public class UserAction extends BaseAction{
      * @param content（评论内容）（encoding）
      * @return 返回成功code 200
      */
-    public String comment(){
+    public String comment() {
         Integer fireId = ParamUtil.getIntParameter(request, "fireId", null);
         Assert.notNull(fireId);
         Integer followerId = ParamUtil.getIntParameter(request, "followerId", null);
@@ -169,7 +196,8 @@ public class UserAction extends BaseAction{
         Assert.notNull(authorId);
         String content = ParamUtil.getStringParameter(request, "content", null);
         Assert.notNull(content);
-        UserFireComment comment = new UserFireComment(fireId, followerId, authorId, CodeUtil.decode(content));
+        UserFireComment comment = new UserFireComment(fireId, followerId, authorId,
+            CodeUtil.decode(content));
         returnFastJSON(this.userManager.comment(comment));
         return null;
     }
@@ -193,17 +221,17 @@ public class UserAction extends BaseAction{
      *          headerUrl   （头像URL）
      *          sex    （性别：0女人，1男人）
      */
-    public String commentList(){
+    public String commentList() {
         Integer fireId = ParamUtil.getIntParameter(request, "fireId", null);
         Assert.notNull(fireId);
         Integer pageOffset = ParamUtil.getIntParameter(request, "pageOffset", null);
         Assert.notNull(fireId);
         Integer pageSize = ParamUtil.getIntParameter(request, "pageSize", null);
         Assert.notNull(fireId);
-        returnFastJSON(this.userManager.commentList(fireId,pageOffset,pageSize));
+        returnFastJSON(this.userManager.commentList(fireId, pageOffset, pageSize));
         return null;
     }
-
+    
     /**
      * <pre>
      *  点赞
@@ -212,7 +240,7 @@ public class UserAction extends BaseAction{
      * @param userId（用户id）
      * @return 返回成功code 200
      */
-    public String praise(){
+    public String praise() {
         Integer fireId = ParamUtil.getIntParameter(request, "fireId", null);
         Assert.notNull(fireId);
         Integer userId = ParamUtil.getIntParameter(request, "userId", null);
@@ -230,7 +258,7 @@ public class UserAction extends BaseAction{
      * @param userId（用户id）
      * @return 返回成功code 200
      */
-    public String step(){
+    public String step() {
         Integer fireId = ParamUtil.getIntParameter(request, "fireId", null);
         Assert.notNull(fireId);
         Integer userId = ParamUtil.getIntParameter(request, "userId", null);
@@ -239,5 +267,15 @@ public class UserAction extends BaseAction{
         returnFastJSON(this.userManager.step(userFireStep));
         return null;
     }
+    
+    /**
+     * <pre>
+     *   查询所有tag标签
+     * </pre>
+     * @return
+     */
+    public String getAllTag() {
+        returnFastJSON(this.userManager.getAllTag());
+        return null;
+    }
 }
-

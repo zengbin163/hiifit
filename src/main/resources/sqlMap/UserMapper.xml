@@ -54,6 +54,12 @@
 		       noun noun
 		from t_hiifit_user_noun
 	</select>
+	<select id="getAllUserTag" resultType="com.hiifit.haipay.vo.UserTag">
+		select id id,
+		       tag_name tagName
+		from t_hiifit_user_tag 
+		where flag=1
+	</select>
 	
 	<update id="updateUserById" parameterType="com.hiifit.haipay.vo.User">
 		update t_hiifit_user set modify_time=now()
@@ -114,8 +120,7 @@
 		  	t2.nick_name nickName,
 		  	t2.header_url headerUrl,
 		  	t2.sex sex
-		from t_hiifit_user_fire t1,t_hiifit_user t2
-		where t1.user_id=t2.id
+		from t_hiifit_user_fire t1 join t_hiifit_user t2 on t1.user_id=t2.id
 	</sql>
 	<sql id="getUserFiresOrderBy">
 		order by t1.fire_praise_count desc,t1.fire_com_count desc      
@@ -127,6 +132,12 @@
 		      	and t1.north_latitude>#{minLng} and t1.north_latitude<#{maxLng}
 		       ]]>
           <include refid="getUserFiresOrderBy"></include>
+	</select>
+	<select id="getFireTagsByFireId" resultType="com.hiifit.haipay.vo.UserTag">
+	  select t2.id id,
+	  		 t2.tag_name tagName 
+	  from t_hiifit_user_fire_tag t1 left join t_hiifit_user_tag t2 
+	  	 on t1.tag_id=t2.id and t2.flag=1 and t1.fire_id = #{fireId}
 	</select>
 
     <select id="getUserFiresByPage" resultType="com.hiifit.haipay.vo.UserFire">
@@ -141,7 +152,7 @@
 		where t1.user_id=t2.id 
 	</select>
 	
-	<insert id="insertUserFire" parameterType="com.hiifit.haipay.vo.UserFire">
+	<insert id="insertUserFire" parameterType="com.hiifit.haipay.vo.UserFire" useGeneratedKeys="true" keyProperty="id">
 		insert into t_hiifit_user_fire(
 			user_id,
 			fire_reason,
@@ -241,6 +252,19 @@
 			#{fireId},
 			#{userId},
 			0,
+			NOW()
+		)
+	</insert>
+	<insert id="insertUserFireTag" parameterType="com.hiifit.haipay.vo.UserFireTag">
+		insert into t_hiifit_user_fire_tag(
+			fire_id,
+			tag_id,
+			create_time,
+			modify_time)
+		values(
+			#{fireId},
+			#{tagId},
+			NOW(),
 			NOW()
 		)
 	</insert>

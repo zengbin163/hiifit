@@ -28,8 +28,10 @@ import com.hiifit.haipay.vo.UserFire;
 import com.hiifit.haipay.vo.UserFireComment;
 import com.hiifit.haipay.vo.UserFirePraise;
 import com.hiifit.haipay.vo.UserFireStep;
+import com.hiifit.haipay.vo.UserFireTag;
 import com.hiifit.haipay.vo.UserLogo;
 import com.hiifit.haipay.vo.UserNoun;
+import com.hiifit.haipay.vo.UserTag;
 import com.hiifit.haipay.vo.UserVerb;
 
 @Service
@@ -41,6 +43,7 @@ public class UserManagerImpl implements UserManager {
     private Map<Integer, String> headerLogoMap = new HashMap<Integer, String>(); // 随机头像URL
     private Map<Integer, String> nickNameVerbMap = new HashMap<Integer, String>(); // 随机昵称动词
     private Map<Integer, String> nickNameNounMap = new HashMap<Integer, String>(); // 随机昵称名称
+    private Map<Integer, String> tagNameMap = new HashMap<Integer, String>(); // 怒火心情的标签
     
     private static final int headerBegin = 1;
     private static final int headerEnd = 7;
@@ -50,6 +53,7 @@ public class UserManagerImpl implements UserManager {
     private static final int nounEnd = 77;
 
     private static final String FROM = "来自 # ";
+    private static final String DOT = ",";
     
     @PostConstruct
     public void init() {
@@ -69,6 +73,12 @@ public class UserManagerImpl implements UserManager {
         if (!CollectionUtils.isEmpty(userNounList)) {
             for (UserNoun userNoun : userNounList) {
                 nickNameNounMap.put(userNoun.getId(), userNoun.getNoun());
+            }
+        }
+        List<UserTag> userTagList = this.userDao.getAllUserTag();
+        if (!CollectionUtils.isEmpty(userTagList)) {
+            for (UserTag userTag : userTagList) {
+                tagNameMap.put(userTag.getId(), userTag.getTagName());
             }
         }
     }
@@ -147,8 +157,24 @@ public class UserManagerImpl implements UserManager {
     
     @Override
     public Map<String, Object> fire(UserFire userFire) {
-        this.userDao.insertUserFire(userFire);
+        Integer fireId = this.userDao.insertUserFire(userFire);
+        if(!StringUtils.isEmpty(userFire.getTagIds())){
+            String []ids = userFire.getTagIds().split(DOT);
+            for(String tagId:ids){
+                UserFireTag userFireTag = new UserFireTag(fireId, Integer.parseInt(tagId));
+                userDao.insertUserFireTag(userFireTag);
+            }
+        }
         return ResultUtil.successMap();
+    }
+    
+    @Override
+    public UserFire getUserFireById(Integer fireId){
+        UserFire userFire = this.userDao.getUserFireById(fireId);
+        if(null!=userFire){
+            userFire.setTagList(this.userDao.getFireTagsByFireId(fireId));
+        }
+        return userFire;
     }
     
     @Override
@@ -228,6 +254,10 @@ public class UserManagerImpl implements UserManager {
         return ResultUtil.successMap();
     }
     
+    public Map<Integer,String> getAllTag(){
+        return this.tagNameMap;
+    }
+    
     private void increasePraise(UserFire userFire){
         int version = userFire.getVersion() + 1;
         int praise = userFire.getFirePraiseCount() + 1;
@@ -263,4 +293,5 @@ public class UserManagerImpl implements UserManager {
         userFire.setStepIsolation(true);
         this.userDao.updateUserFireCountById(userFire);
     }
+    
 }
