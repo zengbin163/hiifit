@@ -80,7 +80,7 @@ public class UserAction extends BaseAction {
         String nickName = ParamUtil.getStringParameter(request, "nickName", null);
         String headerUrl = ParamUtil.getStringParameter(request, "headerUrl", null);
         Integer sex = ParamUtil.getIntParameter(request, "sex", null);
-        returnFastJSON(this.userManager.updateUserInfo(userId, nickName, headerUrl, sex));
+        returnWithoutFastJSON(this.userManager.updateUserInfo(userId, nickName, headerUrl, sex));
         return null;
     }
     
@@ -126,7 +126,7 @@ public class UserAction extends BaseAction {
      * @param fireReason（内容）（encoding）
      * @param eastLatitude（东经坐标）
      * @param northLatitude（北纬坐标）
-     * @param picUrl（图片URL）
+     * @param picUrl1 picUrl2 picUrl3 picUrl4（图片URL）
      * @param address（来自#详细地址#）（encoding）
      * @return 成功返回recode=200，失败抛异常
      */
@@ -152,7 +152,7 @@ public class UserAction extends BaseAction {
             DEFAULT_VALUE, DEFAULT_VALUE, DEFAULT_VALUE, new BigDecimal(eastLatitude),
             new BigDecimal(northLatitude), mapLevel, picUrl1, picUrl2, picUrl3, picUrl4,
             CodeUtil.decode(address), tagIds);
-        returnFastJSON(this.userManager.fire(userFire));
+        returnWithoutFastJSON(this.userManager.fire(userFire));
         return null;
     }
     
@@ -201,7 +201,7 @@ public class UserAction extends BaseAction {
         Assert.notNull(content);
         UserFireComment comment = new UserFireComment(fireId, followerId, authorId,
             CodeUtil.decode(content));
-        returnFastJSON(this.userManager.comment(comment));
+        returnWithoutFastJSON(this.userManager.comment(comment));
         return null;
     }
     
@@ -249,7 +249,7 @@ public class UserAction extends BaseAction {
         Integer userId = ParamUtil.getIntParameter(request, "userId", null);
         Assert.notNull(userId);
         UserFirePraise userFirePraise = new UserFirePraise(fireId, userId);
-        returnFastJSON(this.userManager.praise(userFirePraise));
+        returnWithoutFastJSON(this.userManager.praise(userFirePraise));
         return null;
     }
     
@@ -267,7 +267,7 @@ public class UserAction extends BaseAction {
         Integer userId = ParamUtil.getIntParameter(request, "userId", null);
         Assert.notNull(userId);
         UserFireStep userFireStep = new UserFireStep(fireId, userId);
-        returnFastJSON(this.userManager.step(userFireStep));
+        returnWithoutFastJSON(this.userManager.step(userFireStep));
         return null;
     }
     

@@ -1,0 +1,316 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hiifit.haipay.dao.UserDao">
+
+	<select id="getByUserId" resultType="com.hiifit.haipay.vo.User">
+		select id id,
+			   nick_name nickName,
+			   mobile mobile,
+		       password password,
+		       last_login_time lastLoginTime,
+		       header_url headerUrl,
+		       sex sex,
+		       device_id deviceId
+		from t_hiifit_user
+		where id = #{userId}
+	</select>
+	<select id="getUserByDeviceId" resultType="com.hiifit.haipay.vo.User">
+		select id id,
+			   nick_name nickName,
+			   mobile mobile,
+		       password password,
+		       last_login_time lastLoginTime,
+		       header_url headerUrl,
+		       sex sex,
+		       device_id deviceId
+		from t_hiifit_user
+		where device_id = #{deviceId}
+	</select>
+	<insert id="insertUser" parameterType="com.hiifit.haipay.vo.User">
+		insert into t_hiifit_user(
+			register_time,
+		    last_login_time,
+		    modify_time,
+		    device_id
+		)values(
+			now(),
+			now(),
+			now(),
+			#{deviceId}		
+		)
+	</insert>
+	<select id="getAllUserLogo" resultType="com.hiifit.haipay.vo.UserLogo">
+		select id id,
+		       header_url headerUrl
+		from t_hiifit_user_logo
+	</select>
+	<select id="getAllUserVerb" resultType="com.hiifit.haipay.vo.UserVerb">
+		select id id,
+		       verb verb
+		from t_hiifit_user_verb
+	</select>
+	<select id="getAllUserNoun" resultType="com.hiifit.haipay.vo.UserNoun">
+		select id id,
+		       noun noun
+		from t_hiifit_user_noun
+	</select>
+	<select id="getAllUserTag" resultType="com.hiifit.haipay.vo.UserTag">
+		select id id,
+		       tag_name tagName
+		from t_hiifit_user_tag 
+		where flag=1
+	</select>
+	
+	<update id="updateUserById" parameterType="com.hiifit.haipay.vo.User">
+		update t_hiifit_user set modify_time=now()
+			<if test="nickName!=null">
+				,nick_name=#{nickName,jdbcType=VARCHAR}
+			</if>
+			<if test="headerUrl!=null">
+				,header_url=#{headerUrl,jdbcType=VARCHAR}
+			</if>
+			<if test="sex!=null">
+				,sex=#{sex,jdbcType=INTEGER}
+			</if>
+			<if test="lastLoginTime!=null">
+				,last_login_time=#{lastLoginTime}
+			</if>
+		<where>
+			<if test="id!=null" >id=#{id,jdbcType=INTEGER}</if>
+			<if test="id==null">1=0</if>
+		</where>
+	</update>
+	<select id="getUserFireById" resultType="com.hiifit.haipay.vo.UserFire">
+	    <include refid="getUserFiresSelect"></include>
+		where t1.id = #{fireId}	
+	</select>	
+	<sql id="getUserFiresSelect">
+		select t1.id id,
+			t1.user_id userId,
+			t1.fire_reason fireReason,
+			t1.fire_value fireValue,
+			t1.fire_praise_count firePraiseCount,
+			t1.fire_step_count fireStepCount,
+			t1.fire_com_count fireComCount,
+			t1.create_date createDate,
+			t1.create_time createTime,
+			t1.modify_time modifyTime,
+			t1.east_latitude eastLatitude,
+			t1.north_latitude northLatitude,
+			t1.map_level mapLevel,
+			t1.pic_url1 picUrl1,
+			t1.pic_url2 picUrl2,
+			t1.pic_url3 picUrl3,
+			t1.pic_url4 picUrl4,
+			t1.address address,
+			t1.version version,
+		  	t2.nick_name nickName,
+		  	t2.header_url headerUrl,
+		  	t2.sex sex
+		from t_hiifit_user_fire t1 join t_hiifit_user t2 on t1.user_id=t2.id
+	</sql>
+	<sql id="getUserFiresOrderBy">
+		order by t1.fire_praise_count desc,t1.fire_com_count desc      
+	</sql>
+	<select id="getUserFiresByLatitude" resultType="com.hiifit.haipay.vo.UserFire">
+          <include refid="getUserFiresSelect"></include>
+		      <![CDATA[ 
+		      	and t1.east_latitude>#{minLat} and t1.east_latitude<#{maxLat}
+		      	and t1.north_latitude>#{minLng} and t1.north_latitude<#{maxLng}
+		       ]]>
+          <include refid="getUserFiresOrderBy"></include>
+	</select>
+	<select id="getFireTagsByFireId" resultType="com.hiifit.haipay.vo.UserTag">
+	  select t2.id id,
+	  		 t2.tag_name tagName 
+	  from t_hiifit_user_fire_tag t1 left join t_hiifit_user_tag t2 
+	  	 on t1.tag_id=t2.id and t2.flag=1 and t1.fire_id = #{fireId}
+	</select>
+
+    <select id="getUserFiresByPage" resultType="com.hiifit.haipay.vo.UserFire">
+          <include refid="getUserFiresSelect"></include>
+          <include refid="getUserFiresOrderBy"></include>
+		  limit #{pageOffset},#{pageSize}
+    </select>	
+	
+	<select id="getUserFiresCountByLatitude" resultType="int">
+		select count(*) 
+		from t_hiifit_user_fire t1,t_hiifit_user t2 
+		where t1.user_id=t2.id 
+	</select>
+	
+	<insert id="insertUserFire" parameterType="com.hiifit.haipay.vo.UserFire" useGeneratedKeys="true" keyProperty="id">
+		insert into t_hiifit_user_fire(
+			user_id,
+			fire_reason,
+			fire_value,
+			fire_praise_count,
+			fire_step_count,
+			fire_com_count,
+			create_date,
+			create_time,
+			modify_time,
+			east_latitude,
+			north_latitude,
+			map_level,
+			pic_url1,
+			pic_url2,
+			pic_url3,
+			pic_url4,
+			address
+		)values(
+			#{userId},
+			#{fireReason},
+			#{fireValue},
+			#{firePraiseCount},
+			#{fireStepCount},
+			#{fireComCount},
+			CURDATE(),
+			NOW(),
+			NOW(),
+			#{eastLatitude},
+			#{northLatitude},
+			#{mapLevel},
+			#{picUrl1},
+			#{picUrl2},
+			#{picUrl3},
+			#{picUrl4},
+			#{address}
+		)
+	</insert>
+	
+	<insert id="insertUserFireComment" parameterType="com.hiifit.haipay.vo.UserFireComment">
+		insert into t_hiifit_user_fire_comment(
+			fire_id,
+			follower_id,
+			author_id,
+			content,
+			flag,
+			create_time,
+			east_latitude,
+			north_latitude,
+			address
+		)values(
+			#{fireId},
+			#{followerId},
+			#{authorId},
+			#{content},
+			0,
+			NOW(),
+			#{eastLatitude},
+			#{northLatitude},
+			#{address}
+		)
+	</insert>
+	
+	<select id="getUserFireCommentsByPage" resultType="com.hiifit.haipay.vo.UserFireComment">
+		select t1.id id,
+			t1.follower_id followerId,
+			t1.content content,
+			t1.create_time createTime,
+			t1.east_latitude eastLatitude,
+			t1.north_latitude northLatitude,
+			t1.address address,
+			t1.flag flag,
+			t2.nick_name nickName,
+			t2.header_url headerUrl,
+			t2.sex sex
+		from t_hiifit_user_fire_comment t1,t_hiifit_user t2
+		where t1.follower_id=t2.id
+		      and t1.fire_id = #{fireId}
+ 	    order by t1.create_time DESC
+		limit #{pageOffset},#{pageSize}
+	</select>
+	
+	<insert id="insertUserFirePraise" parameterType="com.hiifit.haipay.vo.UserFirePraise">
+		insert into t_hiifit_user_fire_praise(
+			fire_id,
+			user_id,
+			flag,
+			create_time)
+		values(
+			#{fireId},
+			#{userId},
+			0,
+			NOW()
+		)
+	</insert>
+	<insert id="insertUserFireStep" parameterType="com.hiifit.haipay.vo.UserFireStep">
+		insert into t_hiifit_user_fire_step(
+			fire_id,
+			user_id,
+			flag,
+			create_time)
+		values(
+			#{fireId},
+			#{userId},
+			0,
+			NOW()
+		)
+	</insert>
+	<insert id="insertUserFireTag" parameterType="com.hiifit.haipay.vo.UserFireTag">
+		insert into t_hiifit_user_fire_tag(
+			fire_id,
+			tag_id,
+			create_time,
+			modify_time)
+		values(
+			#{fireId},
+			#{tagId},
+			NOW(),
+			NOW()
+		)
+	</insert>
+	<select id="getUserFirePraiseByFireId" resultType="com.hiifit.haipay.vo.UserFirePraise">
+		select id id,
+			   fire_id fireId,
+		       user_id userId,
+		       flag flag
+		from t_hiifit_user_fire_praise
+		where fire_id=#{fireId} and user_id=#{userId}
+	</select>
+	<select id="getUserFireStepByFireId" resultType="com.hiifit.haipay.vo.UserFireStep">
+		select id id,
+			   fire_id fireId,
+		       user_id userId,
+		       flag flag
+		from t_hiifit_user_fire_step
+		where fire_id=#{fireId} and user_id=#{userId}
+	</select>
+	<update id="updateUserFirePraiseByFireId" parameterType="com.hiifit.haipay.vo.UserFirePraise">
+		update t_hiifit_user_fire_praise 
+			set modify_time = now()
+			<if test="flag != null">
+				,flag=#{flag}
+			</if>
+		where fire_id=#{fireId} and user_id=#{userId}
+	</update>
+	<update id="updateUserFireStepByFireId" parameterType="com.hiifit.haipay.vo.UserFireStep">
+		update t_hiifit_user_fire_step 
+			set modify_time = now()
+			<if test="flag != null">
+				,flag=#{flag}
+			</if>
+		where fire_id=#{fireId} and user_id=#{userId}
+	</update>
+	
+	<update id="updateUserFireCountById" parameterType="com.hiifit.haipay.vo.UserFire">
+		update t_hiifit_user_fire 
+			set modify_time = now()
+			<if test="praiseIsolation == true">
+				,fire_praise_count=#{firePraiseCount}
+			</if>
+			<if test="stepIsolation == true">
+				,fire_step_count=#{fireStepCount}
+			</if>
+			<if test="commentIsolation == true">
+				,fire_com_count=#{fireComCount}
+			</if>
+			<if test="version!=null">
+				,version=#{version}
+			</if>
+	        <![CDATA[ 
+ 	          where id = #{id} and version < #{version}
+	        ]]>		
+	</update>
+</mapper>

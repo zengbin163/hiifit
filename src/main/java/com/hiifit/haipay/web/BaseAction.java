@@ -37,7 +37,15 @@ public abstract class BaseAction extends ActionSupport implements ServletRequest
     
     protected void returnFastJSON(Object obj) {
         if(obj != null){
-            WebUtil.returnJSON(response, JSON.toJSONString(obj, SerializerFeature.WriteMapNullValue).toString(), "json");
+            WebUtil.returnJSON(response,("{\"recode\":\"" + ReturnCodeEnum.SUCCESS.getCode() + "\","  + "\"data\":" + JSON.toJSONString(obj, SerializerFeature.WriteMapNullValue).toString()  + ",\"msg\":\"" + ReturnCodeEnum.SUCCESS.getString() + "\"}"),"json");
+        }else{
+            WebUtil.returnJSON(response, ("{\"recode\":\"" + ReturnCodeEnum.NOT_EXISTS.getCode() + "\"," + "\"msg\":\"" + ReturnCodeEnum.NOT_EXISTS.getString() + "\"}"), "json");
+        }
+    }
+
+    protected void returnWithoutFastJSON(Object obj) {
+        if(obj != null){
+            WebUtil.returnJSON(response,(JSON.toJSONString(obj, SerializerFeature.WriteMapNullValue).toString()),"json");
         }else{
             WebUtil.returnJSON(response, ("{\"recode\":\"" + ReturnCodeEnum.NOT_EXISTS.getCode() + "\"," + "\"msg\":\"" + ReturnCodeEnum.NOT_EXISTS.getString() + "\"}"), "json");
         }

@@ -98,7 +98,10 @@
 			t1.east_latitude eastLatitude,
 			t1.north_latitude northLatitude,
 			t1.map_level mapLevel,
-			t1.pic_url picUrl,
+			t1.pic_url1 picUrl1,
+			t1.pic_url2 picUrl2,
+			t1.pic_url3 picUrl3,
+			t1.pic_url4 picUrl4,
 			t1.address address,
 			t1.version version,
 		  	t2.nick_name nickName,
@@ -150,7 +153,10 @@
 			east_latitude,
 			north_latitude,
 			map_level,
-			pic_url,
+			pic_url1,
+			pic_url2,
+			pic_url3,
+			pic_url4,
 			address
 		)values(
 			#{userId},
@@ -165,7 +171,10 @@
 			#{eastLatitude},
 			#{northLatitude},
 			#{mapLevel},
-			#{picUrl},
+			#{picUrl1},
+			#{picUrl2},
+			#{picUrl3},
+			#{picUrl4},
 			#{address}
 		)
 	</insert>
