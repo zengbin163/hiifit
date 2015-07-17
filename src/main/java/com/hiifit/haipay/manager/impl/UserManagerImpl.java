@@ -43,7 +43,7 @@ public class UserManagerImpl implements UserManager {
     private Map<Integer, String> headerLogoMap = new HashMap<Integer, String>(); // 随机头像URL
     private Map<Integer, String> nickNameVerbMap = new HashMap<Integer, String>(); // 随机昵称动词
     private Map<Integer, String> nickNameNounMap = new HashMap<Integer, String>(); // 随机昵称名称
-    private Map<Integer, String> tagNameMap = new HashMap<Integer, String>(); // 怒火心情的标签
+    private List<UserTag> userTagList = new ArrayList<UserTag>(); // 怒火心情的标签
     
     private static final int headerBegin = 1;
     private static final int headerEnd = 7;
@@ -75,12 +75,8 @@ public class UserManagerImpl implements UserManager {
                 nickNameNounMap.put(userNoun.getId(), userNoun.getNoun());
             }
         }
-        List<UserTag> userTagList = this.userDao.getAllUserTag();
-        if (!CollectionUtils.isEmpty(userTagList)) {
-            for (UserTag userTag : userTagList) {
-                tagNameMap.put(userTag.getId(), userTag.getTagName());
-            }
-        }
+        
+        userTagList = this.userDao.getAllUserTag();
     }
     
     @Override
@@ -254,8 +250,8 @@ public class UserManagerImpl implements UserManager {
         return ResultUtil.successMap();
     }
     
-    public Map<Integer,String> getAllTag(){
-        return this.tagNameMap;
+    public List<UserTag> getAllTag(){
+        return userTagList;
     }
     
     private void increasePraise(UserFire userFire){

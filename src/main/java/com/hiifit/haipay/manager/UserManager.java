@@ -9,6 +9,7 @@ import com.hiifit.haipay.vo.UserFire;
 import com.hiifit.haipay.vo.UserFireComment;
 import com.hiifit.haipay.vo.UserFirePraise;
 import com.hiifit.haipay.vo.UserFireStep;
+import com.hiifit.haipay.vo.UserTag;
 
 public interface UserManager {
     /***
@@ -141,5 +142,5 @@ public interface UserManager {
      * </pre>
      * @return
      */
-    Map<Integer,String> getAllTag();
+    List<UserTag> getAllTag();
 }

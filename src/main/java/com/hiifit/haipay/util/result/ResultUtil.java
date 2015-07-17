@@ -21,6 +21,7 @@ public class ResultUtil {
     
     public static final String RETURN_KEY = "recode";
     public static final String MSG = "msg";
+    public static final String DATA = "data";
     
     public static Map<String, Object> successMap() {
         Map<String, Object> map = new HashMap<String, Object>();
