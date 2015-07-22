@@ -151,6 +151,14 @@ public class UserManagerImpl implements UserManager {
         return enList;
     }
     
+    public List<UserFire> getUserFiresByPage(Integer pageOffset,Integer pageSize){
+        return this.userDao.getUserFiresByPage(pageOffset, pageSize);
+    }
+    
+    public List<UserFire> getMyFireList(Integer userId){
+        return this.userDao.getUserFiresByUserId(userId);
+    }
+    
     @Override
     public Map<String, Object> fire(UserFire userFire) {
         Integer fireId = this.userDao.insertUserFire(userFire);
@@ -165,10 +173,16 @@ public class UserManagerImpl implements UserManager {
     }
     
     @Override
-    public UserFire getUserFireById(Integer fireId){
+    public UserFire getUserFireById(Integer fireId,Integer userId){
         UserFire userFire = this.userDao.getUserFireById(fireId);
         if(null!=userFire){
             userFire.setTagList(this.userDao.getFireTagsByFireId(fireId));
+            UserFirePraise t = this.userDao.getUserFirePraiseByFireId(fireId, userId);
+            if(null!=t){
+                userFire.setPraiseSelf(true);
+            }else{
+                userFire.setPraiseSelf(false);
+            }
         }
         return userFire;
     }
@@ -290,4 +304,7 @@ public class UserManagerImpl implements UserManager {
         this.userDao.updateUserFireCountById(userFire);
     }
     
+    public List<UserFire> getUserFiresByMyInvolve(Integer userId){
+        return this.userDao.getUserFiresByMyInvolve(userId);
+    }
 }

@@ -137,6 +137,16 @@ public interface UserDao extends IBaseDao<User> {
     /**
      * 
      * <pre>
+     *      根据用户id查询用户发表的怒怒
+     * </pre>
+     * @param userId
+     * @return
+     */
+    public List<UserFire> getUserFiresByUserId(Integer userId);
+    
+    /**
+     * 
+     * <pre>
      *   查询用户发布的火焰总共多少条
      * </pre>
      * @return
@@ -220,4 +230,14 @@ public interface UserDao extends IBaseDao<User> {
      * @return
      */
     public int updateUserFireCountById(UserFire userFire);
+    
+    /**
+     * 
+     * <pre>
+     *     查询我参与过的消息
+     * </pre>
+     * @param userId
+     * @return
+     */
+    public List<UserFire> getUserFiresByMyInvolve(@Param("userId")int userId);
 }

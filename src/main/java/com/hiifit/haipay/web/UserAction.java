@@ -45,7 +45,7 @@ public class UserAction extends BaseAction {
         String deviceId = ParamUtil.getStringParameter(request, "deviceId", null);
         Assert.notNull(deviceId);
         User user = userManager.getUserByDeviceId(deviceId);
-        returnFastJSON(user);
+        returnSingleFastJSON(user);
         return null;
     }
     
@@ -60,7 +60,7 @@ public class UserAction extends BaseAction {
         Integer userId = ParamUtil.getIntParameter(request, "userId", null);
         Assert.notNull(userId);
         User user = userManager.getByUserId(userId);
-        returnFastJSON(user);
+        returnSingleFastJSON(user);
         return null;
     }
     
@@ -116,6 +116,59 @@ public class UserAction extends BaseAction {
         return null;
     }
     
+    /**
+     * 
+     * <pre>
+     *  查询前pageSize条最热门的怒怒，比如前10条，pageOffset=0/pageSize=10
+     * </pre>
+     * @param pageOffset 分页第几条开始
+     * @param pageSize   返回多少条
+     * @return eastLatitude（东经坐标值）
+     *         northLatitude（北纬坐标值）
+     *         userId（怒火发表人）
+     *         nickName（怒火发表人昵称）
+     *         headerUrl（头像URL）
+     *         fireValue（怒值）
+     *         fireReason（怒因）（decoding）
+     *         firePraiseCount（点赞数）
+     *         fireStepCount（点踩数）
+     *         fireComCount（评论数）
+     *         address（来自#详细地址#）（decoding）
+     */
+    public String getUserFiresByPage(){
+        Integer pageOffset = ParamUtil.getIntParameter(request, "pageOffset", null);
+        Assert.notNull(pageOffset);
+        Integer pageSize = ParamUtil.getIntParameter(request, "pageSize", null);
+        Assert.notNull(pageSize);
+        returnFastJSON(this.userManager.getUserFiresByPage(pageOffset, pageSize));
+        return null;
+    }
+    
+    /**
+     * 
+     * <pre>
+     *      查询我自己发表的怒怒
+     * </pre>
+     * @param userId 用户id
+     * @return eastLatitude（东经坐标值）
+     *         northLatitude（北纬坐标值）
+     *         userId（怒火发表人）
+     *         nickName（怒火发表人昵称）
+     *         headerUrl（头像URL）
+     *         fireValue（怒值）
+     *         fireReason（怒因）（decoding）
+     *         firePraiseCount（点赞数）
+     *         fireStepCount（点踩数）
+     *         fireComCount（评论数）
+     *         address（来自#详细地址#）（decoding）
+     */
+    public String getMyFireList(){
+        Integer userId = ParamUtil.getIntParameter(request, "userId", null);
+        Assert.notNull(userId);
+        returnFastJSON(this.userManager.getMyFireList(userId));
+        return null;
+    }
+    
     /***
      * 
      * <pre>
@@ -128,6 +181,7 @@ public class UserAction extends BaseAction {
      * @param northLatitude（北纬坐标）
      * @param picUrl1 picUrl2 picUrl3 picUrl4（图片URL）
      * @param address（来自#详细地址#）（encoding）
+     * @param tagIds 通过英文逗号分隔
      * @return 成功返回recode=200，失败抛异常
      */
     public String fire() {
@@ -161,6 +215,7 @@ public class UserAction extends BaseAction {
      *     根据火焰id查询火焰详情
      * </pre>
      * @param fireId（火焰id）
+     * @param userId（用户id）
      * @return fireReason（怒因）
      *         fireValue（怒值）
      *         firePraiseCount（点赞数）
@@ -171,11 +226,21 @@ public class UserAction extends BaseAction {
      *         userId（怒火发表人）
      *         nickName（怒火发表人昵称）
      *         headerUrl（头像URL）
+     *         isPraiseSelf 是否被自己点赞过
+     *         picUrl1 图片1
+     *         picUrl2 图片2
+     *         picUrl3 图片3
+     *         picUrl4 图片4
+     *         tagList : {
+     *              id,
+     *              tagName
+     *         }
      */
     public String getFire() {
         Integer fireId = ParamUtil.getIntParameter(request, "fireId", null);
+        Integer userId = ParamUtil.getIntParameter(request, "userId", null);
         Assert.notNull(fireId);
-        returnFastJSON(this.userManager.getUserFireById(fireId));
+        returnSingleFastJSON(this.userManager.getUserFireById(fireId,userId));
         return null;
     }
     
@@ -279,6 +344,31 @@ public class UserAction extends BaseAction {
      */
     public String getAllTag() {
         returnFastJSON(this.userManager.getAllTag());
+        return null;
+    }
+    
+    /**
+     * 
+     * <pre>
+     *      查询我参与的怒怒
+     * </pre>
+     * @param userId 用户id
+     * @return eastLatitude（东经坐标值）
+     *         northLatitude（北纬坐标值）
+     *         userId（怒火发表人）
+     *         nickName（怒火发表人昵称）
+     *         headerUrl（头像URL）
+     *         fireValue（怒值）
+     *         fireReason（怒因）（decoding）
+     *         firePraiseCount（点赞数）
+     *         fireStepCount（点踩数）
+     *         fireComCount（评论数）
+     *         address（来自#详细地址#）（decoding）
+     */
+    public String getUserFiresByMyInvolve(){
+        Integer userId = ParamUtil.getIntParameter(request, "userId", null);
+        Assert.notNull(userId);
+        returnFastJSON(this.userManager.getUserFiresByMyInvolve(userId));
         return null;
     }
 }

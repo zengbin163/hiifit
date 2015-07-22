@@ -79,6 +79,27 @@ public interface UserManager {
     /***
      * 
      * <pre>
+     *      查询最热的前pageSize条怒怒
+     * </pre>
+     * @param pageOffset
+     * @param pageSize
+     * @return
+     */
+    List<UserFire> getUserFiresByPage(Integer pageOffset,Integer pageSize);
+    
+    /**
+     * 
+     * <pre>
+     *      查询我发表的怒怒
+     * </pre>
+     * @param userId
+     * @return
+     */
+    List<UserFire> getMyFireList(Integer userId);
+    
+    /***
+     * 
+     * <pre>
      *    发泄怒火
      * </pre>
      * @param userId（用户id）
@@ -95,7 +116,7 @@ public interface UserManager {
      * @param fireId
      * @return
      */
-    UserFire getUserFireById(Integer fireId);
+    UserFire getUserFireById(Integer fireId,Integer userId);
     
     /**
      * 
@@ -143,4 +164,14 @@ public interface UserManager {
      * @return
      */
     List<UserTag> getAllTag();
+    
+    /**
+     * 
+     * <pre>
+     *    查询我参与的怒怒
+     * </pre>
+     * @param userId
+     * @return
+     */
+    List<UserFire> getUserFiresByMyInvolve(Integer userId);
 }

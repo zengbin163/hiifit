@@ -43,6 +43,7 @@ public class UserFire extends BaseVo implements Serializable {
     private Integer sex;
     private String address;
     private String tagIds;// 标签id，通过逗号分隔
+    private boolean isPraiseSelf;//是否被自己点赞
     
     /**用于评论数、点赞数、点踩数更新作隔离**/
     private boolean commentIsolation = false;
@@ -282,6 +283,14 @@ public class UserFire extends BaseVo implements Serializable {
     
     public void setTagList(List<UserTag> tagList) {
         this.tagList = tagList;
+    }
+
+    public boolean isPraiseSelf() {
+        return isPraiseSelf;
+    }
+
+    public void setPraiseSelf(boolean isPraiseSelf) {
+        this.isPraiseSelf = isPraiseSelf;
     }
     
 }
