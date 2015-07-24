@@ -12,6 +12,7 @@ import org.springframework.util.Assert;
 
 import com.cmcc.common.util.ParamUtil;
 import com.google.common.collect.Maps;
+import com.hiifit.haipay.enumEntity.ReturnCodeEnum;
 import com.hiifit.haipay.util.http.HttpUtils;
 import com.hiifit.haipay.util.image.FileCopyUtil;
 import com.hiifit.haipay.util.image.ImageCompressUtil;
@@ -71,7 +72,9 @@ public class UploadAction extends BaseAction {
             imgUrl = imgUrl.replace("_R", "_X");
         }
         rtnMap.put("path", imgUrl);
-        returnFastJSON(rtnMap);
+        rtnMap.put("msg", ReturnCodeEnum.SUCCESS.getString());
+        rtnMap.put("recode", ReturnCodeEnum.SUCCESS.getCode());
+        returnSingleFastJSON(rtnMap);
         return null;
     }
     

@@ -162,6 +162,14 @@ public class UserManagerImpl implements UserManager {
     @Override
     public Map<String, Object> fire(UserFire userFire) {
         Integer fireId = this.userDao.insertUserFire(userFire);
+        //更新怒值
+        User user = this.userDao.getByUserId(userFire.getUserId());
+        if(null!=user){
+            Integer fireValue = (null == user.getFireValue()) ? 0 : user.getFireValue();
+            fireValue = fireValue + userFire.getFireValue();
+            user.setFireValue(fireValue);
+            this.userDao.updateUserById(user);
+        }
         if(!StringUtils.isEmpty(userFire.getTagIds())){
             String []ids = userFire.getTagIds().split(DOT);
             for(String tagId:ids){

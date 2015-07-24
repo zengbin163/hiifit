@@ -240,6 +240,7 @@ public class UserAction extends BaseAction {
         Integer fireId = ParamUtil.getIntParameter(request, "fireId", null);
         Integer userId = ParamUtil.getIntParameter(request, "userId", null);
         Assert.notNull(fireId);
+        Assert.notNull(userId);
         returnSingleFastJSON(this.userManager.getUserFireById(fireId,userId));
         return null;
     }

@@ -10,7 +10,8 @@
 		       last_login_time lastLoginTime,
 		       header_url headerUrl,
 		       sex sex,
-		       device_id deviceId
+		       device_id deviceId,
+		       fire_value fireValue
 		from t_hiifit_user
 		where id = #{userId}
 	</select>
@@ -74,6 +75,9 @@
 			</if>
 			<if test="lastLoginTime!=null">
 				,last_login_time=#{lastLoginTime}
+			</if>
+			<if test="fireValue">
+				,fire_value=#{fireValue}
 			</if>
 		<where>
 			<if test="id!=null" >id=#{id,jdbcType=INTEGER}</if>

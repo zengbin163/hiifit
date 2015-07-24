@@ -21,6 +21,8 @@ public class User extends BaseVo implements Serializable {
     
     private Integer sex;
     
+    private Integer fireValue;
+    
     private String deviceId;
     
     public User() {
@@ -101,4 +103,13 @@ public class User extends BaseVo implements Serializable {
     public void setDeviceId(String deviceId) {
         this.deviceId = deviceId;
     }
+
+    public Integer getFireValue() {
+        return fireValue;
+    }
+
+    public void setFireValue(Integer fireValue) {
+        this.fireValue = fireValue;
+    }
+    
 }
